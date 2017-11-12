@@ -1,5 +1,5 @@
 <!-- Application's primary Angular View (MVC) -->
-<div class="col-xs-12 col-sm-offset-2 col-sm-8">
+<div class="col-xs-12 col-sm-offset-1 col-sm-10">
     <ul class="list-group">
         <li class="list-group-item text-center clearfix" ng-show="vm.tasks.length == 0">NO TASKS IN LIST</li>
         <li class="list-group-item text-center clearfix"
@@ -11,8 +11,20 @@
             </button>
 
             <!-- Task text -->
-            <span style="font-weight:bold;" ng-class="{strike: task.isComplete}">
-                {{task.taskName | uppercase | limitTo: 20}}{{task.taskName.length > 20 ? "..." : ""}}
+            <span class="col-xs-offset-1 col-xs-4">
+                <span style="font-weight:bold;" ng-class="{strike: task.isComplete}">
+                    {{task.taskName | uppercase | limitTo: 20}}{{task.taskName.length > 20 ? "..." : ""}}
+                </span>
+            </span>
+
+            <!-- Task due date -->
+            <span class="col-xs-4">
+                <span style="font-weight:bold;" ng-class="{strike: task.isComplete}">
+                    {{task.dateDue.toLocaleDateString() | uppercase}}
+                </span>
+                <span style="font-weight:bold;" ng-class="{strike: task.isComplete}">
+                    {{task.dateDue.toLocaleTimeString() | uppercase}}
+                </span>
             </span>
 
             <!-- Delete Task -->
