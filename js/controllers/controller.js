@@ -158,5 +158,15 @@ angular.module("controller", [])
         taskWithStringDates.dateUpdated = new Date(taskWithStringDates.dateUpdated);
     }
 
+    tasksService.save = function(task){
+        if (task.taskID == null) {
+            // TODO: Handle saving new task
+        } else {
+            var taskToEdit = tasksService.findById(task.taskID);
+            if (taskToEdit) {
+                // TODO: Set to new values
+            }
+        }
+    }
     return tasksService;
 });
