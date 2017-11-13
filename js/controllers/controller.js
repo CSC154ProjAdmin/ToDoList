@@ -146,5 +146,17 @@ angular.module("controller", [])
         }
     }
 
+    tasksService.cloneTask = function(taskToClone){
+        var clonedTask = JSON.parse(JSON.stringify(taskToClone));
+        restoreDates(taskToClone);
+        return clonedTask;
+    }
+
+    var restoreDates = function(taskWithStringDates){
+        taskWithStringDates.dateDue = new Date(taskWithStringDates.dateDue);
+        taskWithStringDates.dateCreated = new Date(taskWithStringDates.dateCreated);
+        taskWithStringDates.dateUpdated = new Date(taskWithStringDates.dateUpdated);
+    }
+
     return tasksService;
 });
