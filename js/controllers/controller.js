@@ -138,5 +138,13 @@ angular.module("controller", [])
         }
     }
 
+    tasksService.findById = function(taskID){
+        for (var idx in tasksService.Tasks) {
+            if (tasksService.Tasks[idx].taskID === taskID) {
+                return tasksService.Tasks[idx];
+            }
+        }
+    }
+
     return tasksService;
 });
