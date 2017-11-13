@@ -165,6 +165,7 @@ angular.module("controller", [])
             var taskToEdit = tasksService.findById(task.taskID);
             if (taskToEdit) {
                 // TODO: Set to new values
+                taskToEdit.taskName = task.taskName;
             }
         }
     }
