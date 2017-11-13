@@ -49,6 +49,28 @@ angular.module("controller", [])
         return pretty;
     }    
 }])
+.controller("TaskController", ["$scope", "$routeParams", "$location", "TasksService", 
+    function($scope, $routeParams, $location, TasksService){
+        $scope.vm = {};
+        if (!$routeParams.taskID){
+            // TODO: Create new task for listID
+            //console.log("No taskID sent");
+        } else {
+            var taskToEdit = TasksService.findById(parseInt($routeParams.taskID));
+            if (taskToEdit && taskToEdit.listID === parseInt($routeParams.listID)) {
+                //console.log("Task found: Cloning for edit");
+                $scope.vm.task = TasksService.cloneTask(taskToEdit);
+            } else {
+                //console.log("Invalid list or task ID. Redirecting home.");
+                $location.path("/");
+            }
+        }
+
+        $scope.save = function(){
+            TasksService.save($scope.vm.task);
+            $location.path("/");
+        }
+}])
 .service("UsersService", function(){
     var usersService = {};
     return usersService;
@@ -116,5 +138,36 @@ angular.module("controller", [])
         }
     }
 
+    tasksService.findById = function(taskID){
+        for (var idx in tasksService.Tasks) {
+            if (tasksService.Tasks[idx].taskID === taskID) {
+                return tasksService.Tasks[idx];
+            }
+        }
+    }
+
+    tasksService.cloneTask = function(taskToClone){
+        var clonedTask = JSON.parse(JSON.stringify(taskToClone));
+        restoreDates(taskToClone);
+        return clonedTask;
+    }
+
+    var restoreDates = function(taskWithStringDates){
+        taskWithStringDates.dateDue = new Date(taskWithStringDates.dateDue);
+        taskWithStringDates.dateCreated = new Date(taskWithStringDates.dateCreated);
+        taskWithStringDates.dateUpdated = new Date(taskWithStringDates.dateUpdated);
+    }
+
+    tasksService.save = function(task){
+        if (task.taskID == null) {
+            // TODO: Handle saving new task
+        } else {
+            var taskToEdit = tasksService.findById(task.taskID);
+            if (taskToEdit) {
+                // TODO: Set to new values
+                taskToEdit.taskName = task.taskName;
+            }
+        }
+    }
     return tasksService;
 });

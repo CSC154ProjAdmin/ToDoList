@@ -1,0 +1,37 @@
+<div class="col-xs-12">
+    <div class="jumbotron text-center">
+        <h1 ng-show="vm.task.taskID == null">Add Task</h1>
+        <h1 ng-show="vm.task.taskID != null">Edit Task</h1>
+    </div>
+    <form name="taskForm">
+        <div class="form-group">
+            <div class="col-sm-8">
+                <label for="name">Task Name</label>
+                <input id="name" class="form-control" required placeholder="Enter task name"
+                ng-model="vm.task.taskName">
+            </div>
+            <div class="col-sm-2">
+                <label for="duedate">Due Date</label>
+                <input name="duedate" class="form-control" type="date">
+            </div>
+            <div class="col-sm-2">
+                <label for="duetime">Due Time</label>
+                <input name="duetime" class="form-control" type="time">
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-lg btn-block" 
+                ng-class="taskForm.$dirty && taskForm.$valid ? 'btn-success' : 'btn-disabled disabled'"
+                ng-click="taskForm.$dirty && taskForm.$valid && save()">
+                <span class="glyphicon glyphicon-pushpin"></span>
+                Save
+            </button>
+        </div>
+        <div class="form-group">
+            <a href="#" class="btn btn-lg btn-block btn-default">
+                <span class="glyphicon glyphicon-remove"></span>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>

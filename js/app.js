@@ -16,6 +16,10 @@ app.config(function($routeProvider, $locationProvider) {
             templateUrl: "views/mainview.html",
             controller: "controller"
         })
+        .when("/editTask/:listID/:taskID", {
+            templateUrl: "views/inputTask.html",
+            controller: "TaskController"
+        })
 /*
         .when("/ANOTHERPAGE", {
             templateUrl: "views/ANOTHERPAGE.html",
