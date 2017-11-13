@@ -19,11 +19,16 @@
 
             <!-- Task due date -->
             <span class="col-xs-4">
+                <!-- Might still use separate spans
                 <span style="font-weight:bold;" ng-class="{strike: task.isComplete}">
                     {{task.dateDue.toLocaleDateString() | uppercase}}
                 </span>
                 <span style="font-weight:bold;" ng-class="{strike: task.isComplete}">
                     {{task.dateDue.toLocaleTimeString() | uppercase}}
+                </span>
+                -->
+                <span style="font-weight:bold;" ng-class="{strike: task.isComplete}">
+                    {{prettyDatetime(task.dateDue) | uppercase}}
                 </span>
             </span>
 
