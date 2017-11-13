@@ -20,6 +20,34 @@ angular.module("controller", [])
     $scope.deleteTask = function(task){
         TasksService.deleteTask(task);
     }
+
+    $scope.prettyDatetime = function(ugly, useSeconds){
+        // Adapted from https://gist.github.com/hurjas/2660489
+
+        var date = [ ugly.getMonth() + 1, ugly.getDate(), ugly.getFullYear() ];
+        if (useSeconds) {
+            var time = [ ugly.getHours(), ugly.getMinutes(), ugly.getSeconds() ];
+        } else {
+            var time = [ ugly.getHours(), ugly.getMinutes() ];            
+        }
+        var suffix = ( time[0] < 12 ) ? "AM" : "PM";
+
+        // Convert hour from military time
+        time[0] = ( time[0] < 12 ) ? time[0] : time[0] - 12;
+
+        // If hour is 0, set it to 12
+        time[0] = time[0] || 12;
+
+        // If seconds and minutes are less than 10, add a zero
+        for ( var i = 1; i < time.length; i++ ) {
+            if ( time[i] < 10 ) {
+                time[i] = "0" + time[i];
+            }
+        }
+
+        var pretty = date.join("/") + " " + time.join(":") + " " + suffix;
+        return pretty;
+    }    
 }])
 .service("UsersService", function(){
     var usersService = {};
