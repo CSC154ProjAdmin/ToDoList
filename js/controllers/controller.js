@@ -49,6 +49,28 @@ angular.module("controller", [])
         return pretty;
     }    
 }])
+.controller("TaskController", ["$scope", "$routeParams", "$location", "TasksService", 
+    function($scope, $routeParams, $location, TasksService){
+        $scope.vm = {};
+        if (!$routeParams.taskID){
+            // TODO: Create new task for listID
+            //console.log("No taskID sent");
+        } else {
+            var taskToEdit = TasksService.findById(parseInt($routeParams.taskID));
+            if (taskToEdit && taskToEdit.listID === parseInt($routeParams.listID)) {
+                //console.log("Task found: Cloning for edit");
+                $scope.vm.task = TasksService.cloneTask(taskToEdit);
+            } else {
+                //console.log("Invalid list or task ID. Redirecting home.");
+                $location.path("/");
+            }
+        }
+
+        $scope.save = function(){
+            TasksService.save($scope.vm.task);
+            $location.path("/");
+        }
+}])
 .service("UsersService", function(){
     var usersService = {};
     return usersService;
