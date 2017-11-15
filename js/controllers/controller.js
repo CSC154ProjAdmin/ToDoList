@@ -148,7 +148,7 @@ angular.module("controller", [])
 
     tasksService.cloneTask = function(taskToClone){
         var clonedTask = JSON.parse(JSON.stringify(taskToClone));
-        restoreDates(taskToClone);
+        restoreDates(clonedTask);
         return clonedTask;
     }
 
