@@ -167,10 +167,33 @@ angular.module("controller", [])
         taskWithStringDates.dateUpdated = new Date(taskWithStringDates.dateUpdated);
     }
 
+    // Client-side ID generator (temporary; for pre-server/db integration)
+    var getNewID = function() {
+        var maxID = function() {
+            var max = -1;
+            for (var idx in tasksService.Tasks) {
+                if (tasksService.Tasks[idx].taskID > max) {
+                    max = tasksService.Tasks[idx].taskID;
+                }
+            }
+            return max;
+        }
+
+        if (tasksService.newID) {
+            tasksService.newID++;
+        } else {
+            tasksService.newID = maxID() + 1;
+        }
+
+        return tasksService.newID;
+    }
+
     tasksService.save = function(task){
         if (task.taskID == null) {
-            // TODO: Handle saving new task
-        } else {
+            //console.log("Saving new task.");
+            task.taskID = getNewID();
+            tasksService.Tasks.push(task);
+         } else {
             var taskToEdit = tasksService.findById(task.taskID);
             if (taskToEdit) {
                 // TODO: Set to new values
