@@ -53,8 +53,8 @@ angular.module("controller", [])
     function($scope, $routeParams, $location, TasksService){
         $scope.vm = {};
         if (!$routeParams.taskID){
-            // TODO: Create new task for listID
-            console.log("No taskID sent. Creating new task.");
+            // TODO: Handle invalid listID. Likely just need to search task list.
+            //console.log("No taskID sent. Creating new task.");
             $scope.vm.task = TasksService.createTask(parseInt($routeParams.listID));
         } else {
             var taskToEdit = TasksService.findById(parseInt($routeParams.taskID));
