@@ -53,8 +53,9 @@ angular.module("controller", [])
     function($scope, $routeParams, $location, TasksService){
         $scope.vm = {};
         if (!$routeParams.taskID){
-            // TODO: Create new task for listID
-            //console.log("No taskID sent");
+            // TODO: Handle invalid listID. Likely just need to search task list.
+            //console.log("No taskID sent. Creating new task.");
+            $scope.vm.task = TasksService.createTask(parseInt($routeParams.listID));
         } else {
             var taskToEdit = TasksService.findById(parseInt($routeParams.taskID));
             if (taskToEdit && taskToEdit.listID === parseInt($routeParams.listID)) {
@@ -81,6 +82,14 @@ angular.module("controller", [])
 })
 .service("TasksService", function(){
     var tasksService = {};
+    tasksService.createTask = function(listID) {
+        return {
+            taskID: null, listID: listID, taskName:"", isComplete: false, 
+            dateDue: new Date(),
+            dateCreated: new Date(),
+            dateUpdated: new Date()
+        };
+    }
 
     tasksService.Tasks = [
         // Dummy / test data
@@ -158,10 +167,33 @@ angular.module("controller", [])
         taskWithStringDates.dateUpdated = new Date(taskWithStringDates.dateUpdated);
     }
 
+    // Client-side ID generator (temporary; for pre-server/db integration)
+    var getNewID = function() {
+        var maxID = function() {
+            var max = -1;
+            for (var idx in tasksService.Tasks) {
+                if (tasksService.Tasks[idx].taskID > max) {
+                    max = tasksService.Tasks[idx].taskID;
+                }
+            }
+            return max;
+        }
+
+        if (tasksService.newID) {
+            tasksService.newID++;
+        } else {
+            tasksService.newID = maxID() + 1;
+        }
+
+        return tasksService.newID;
+    }
+
     tasksService.save = function(task){
         if (task.taskID == null) {
-            // TODO: Handle saving new task
-        } else {
+            //console.log("Saving new task.");
+            task.taskID = getNewID();
+            tasksService.Tasks.push(task);
+         } else {
             var taskToEdit = tasksService.findById(task.taskID);
             if (taskToEdit) {
                 // TODO: Set to new values
