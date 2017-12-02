@@ -54,7 +54,8 @@ angular.module("controller", [])
         $scope.vm = {};
         if (!$routeParams.taskID){
             // TODO: Create new task for listID
-            //console.log("No taskID sent");
+            console.log("No taskID sent. Creating new task.");
+            $scope.vm.task = TasksService.createTask(parseInt($routeParams.listID));
         } else {
             var taskToEdit = TasksService.findById(parseInt($routeParams.taskID));
             if (taskToEdit && taskToEdit.listID === parseInt($routeParams.listID)) {
@@ -81,6 +82,14 @@ angular.module("controller", [])
 })
 .service("TasksService", function(){
     var tasksService = {};
+    tasksService.createTask = function(listID) {
+        return {
+            taskID: null, listID: listID, taskName:"", isComplete: false, 
+            dateDue: new Date(),
+            dateCreated: new Date(),
+            dateUpdated: new Date()
+        };
+    }
 
     tasksService.Tasks = [
         // Dummy / test data
