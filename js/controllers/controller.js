@@ -23,20 +23,22 @@ angular.module("controller", [])
         }
     }
 
-    if ($scope.vm.currentList) {
-        $scope.vm.currentTasks = [];
-        $scope.vm.taskCounts = [];
-        for (var idx in $scope.vm.lists) {
-            $scope.vm.taskCounts[$scope.vm.lists[idx].listID] = 0;
-        }
-        for (var idx in $scope.vm.tasks) {
-            var task = $scope.vm.tasks[idx];
-            $scope.vm.taskCounts[task.listID]++;
-            if (task.listID === $scope.vm.currentList.listID) {
-                $scope.vm.currentTasks.push(task);
+    $scope.$watch(function(){return TasksService.Tasks;}, function(data){
+        if ($scope.vm.currentList) {
+            $scope.vm.currentTasks = [];
+            $scope.vm.taskCounts = [];
+            for (var idx in $scope.vm.lists) {
+                $scope.vm.taskCounts[$scope.vm.lists[idx].listID] = 0;
+            }
+            for (var idx in $scope.vm.tasks) {
+                var task = data[idx];
+                $scope.vm.taskCounts[task.listID]++;
+                if (task.listID === $scope.vm.currentList.listID) {
+                    $scope.vm.currentTasks.push(task);
+                }
             }
         }
-    }
+    }, true); // This 'true' argument is the key to getting the view to update automatically
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
