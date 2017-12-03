@@ -150,14 +150,17 @@ angular.module("controller", [])
         }
 
         $scope.save = function(){
-            var combinedDatetime = new Date($scope.vm.day);
-            combinedDatetime.setHours($scope.vm.time.getHours());
-            combinedDatetime.setMinutes($scope.vm.time.getMinutes());
-            combinedDatetime.setSeconds(0);
-            alert($scope.vm.day + "\n" + $scope.vm.time + "\n\n" + combinedDatetime);
-            $scope.vm.task.dateDue = combinedDatetime;
+            $scope.vm.task.dateDue = combineDateAndTime($scope.vm.day, $scope.vm.time);
             TasksService.save($scope.vm.task);
             $location.path("/list/"+$scope.vm.task.listID);
+        }
+
+        var combineDateAndTime = function(date, time) {
+            var combined = new Date(date);
+            combined.setHours(time.getHours());
+            combined.setMinutes(time.getMinutes());
+            combined.setSeconds(0);
+            return combined;
         }
 }])
 .controller("ListController", ["$scope", "$routeParams", "$location", "ListsService", 
