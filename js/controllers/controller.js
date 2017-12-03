@@ -167,6 +167,17 @@ angular.module("controller", [])
         }
     }
 
+    listsService.cloneList = function(listToClone){
+        var clonedList = JSON.parse(JSON.stringify(listToClone));
+        restoreDates(clonedList);
+        return clonedList;
+    }
+
+    var restoreDates = function(listWithStringDates){
+        listWithStringDates.dateCreated = new Date(listWithStringDates.dateCreated);
+        listWithStringDates.dateUpdated = new Date(listWithStringDates.dateUpdated);
+    }
+
     return listsService;
 })
 .service("TasksService", function(){
