@@ -210,6 +210,36 @@ angular.module("controller", [])
         }
     ];
 
+    var getNewID = function(){
+        var maxID = function(){
+            var max = -1;
+            for (var idx in usersService.Users){
+                if (usersService.Users[idx].userID > max) {
+                    max = usersService.Users[idx].userID;
+                }
+            }
+            return max;
+        }
+
+        if (usersService.newID) {
+            usersService.newID++;
+        } else {
+            usersService.newID = max() + 1;
+        }
+
+        return usersService.newID;
+    }
+
+    usersService.save = function(user){
+        if (user.userID == null) {
+            //console.log("Saving new user.");
+            user.userID = getNewID();
+            usersService.Users.push(user);
+        } else {
+            // TODO: Handle updating existing user
+        }
+    }
+
     return usersService;
 })
 .service("ListsService", function(){
