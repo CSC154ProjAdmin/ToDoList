@@ -229,7 +229,7 @@ angular.module("controller", [])
         if (usersService.newID) {
             usersService.newID++;
         } else {
-            usersService.newID = max() + 1;
+            usersService.newID = maxID() + 1;
         }
 
         return usersService.newID;
