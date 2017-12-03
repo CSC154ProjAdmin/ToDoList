@@ -172,6 +172,14 @@ angular.module("controller", [])
             $location.path("/list/" + $scope.vm.list.listID);
         }
 }])
+.controller("LoginController", ["$scope", "$routeParams", "$location", 
+    function($scope, $routeParams, $location){
+        $scope.vm = {};
+}])
+.controller("RegistrationController", ["$scope", "$routeParams", "$location", 
+    function($scope, $routeParams, $location){
+        $scope.vm = {};
+}])
 .service("UsersService", function(){
     var usersService = {};
     return usersService;
