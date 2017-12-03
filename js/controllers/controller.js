@@ -186,6 +186,7 @@ angular.module("controller", [])
             var listToEdit = listsService.findById(list.listID);
             if (listToEdit) {
                 // TODO: Set to new values
+                listToEdit.listName = list.listName;
             }
         }
     }
