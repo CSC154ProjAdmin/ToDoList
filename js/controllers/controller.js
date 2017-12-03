@@ -175,7 +175,7 @@ angular.module("controller", [])
 .controller("LoginController", ["$scope", "$routeParams", "$location", "UsersService",
     function($scope, $routeParams, $location, UsersService){
         $scope.vm = {};
-        $scope.vm.user = UsersService.createUser();
+        $scope.vm.user = { identifier:"", password:"" };
 
         $scope.login = function(){
             $location.path("/");
