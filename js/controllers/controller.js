@@ -112,8 +112,9 @@ angular.module("controller", [])
         $scope.vm = {};
         $scope.vm.prevListID = $routeParams.prevListID || $routeParams.listID || '';
         if (!$routeParams.listID){
-            // TODO: Create new list for userID
+            // TODO: Handle invalid userID.
             //console.log("No listID sent. Creating new list.");
+            $scope.vm.list = ListsService.createList(parseInt($routeParams.userID));
         } else {
             var listToEdit = ListsService.findById(parseInt($routeParams.listID));
             if (listToEdit && listToEdit.userID === parseInt($routeParams.userID)) {
@@ -136,6 +137,13 @@ angular.module("controller", [])
 })
 .service("ListsService", function(){
     var listsService = {};
+    listsService.createList = function(userID) {
+        return {
+            listID: null, userID: userID, listName:"",
+            dateCreated: new Date(),
+            dateUpdated: new Date()
+        };
+    }
 
     listsService.Lists = [
         {
@@ -179,9 +187,32 @@ angular.module("controller", [])
         listWithStringDates.dateUpdated = new Date(listWithStringDates.dateUpdated);
     }
 
+    // Client-side ID generator (temporary; for pre-server/db integration)
+    var getNewID = function() {
+        var maxID = function() {
+            var max = -1;
+            for (var idx in listsService.Lists) {
+                if (listsService.Lists[idx].listID > max) {
+                    max = listsService.Lists[idx].listID;
+                }
+            }
+            return max;
+        }
+
+        if (listsService.newID) {
+            listsService.newID++;
+        } else {
+            listsService.newID = maxID() + 1;
+        }
+
+        return listsService.newID;
+    }
+
     listsService.save = function(list){
         if (list.listID == null) {
-            // TODO: Handle saving new list
+            //console.log("Saving new list.");
+            list.listID = getNewID();
+            listsService.Lists.push(list);
         } else {
             var listToEdit = listsService.findById(list.listID);
             if (listToEdit) {
