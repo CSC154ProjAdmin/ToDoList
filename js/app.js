@@ -16,6 +16,14 @@ app.config(function($routeProvider, $locationProvider) {
             templateUrl: "views/mainview.html",
             controller: "controller"
         })
+        .when("/login", {
+            templateUrl: "views/login.html",
+            controller: "LoginController"
+        })
+        .when("/signup", {
+            templateUrl: "views/signuppage.html",
+            controller: "RegistrationController"
+        })
         .when("/list/:listID", {
             templateUrl: "views/mainview.html",
             controller: "controller"
