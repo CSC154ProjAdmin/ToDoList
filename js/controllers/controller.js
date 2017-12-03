@@ -6,12 +6,39 @@
 angular.module("controller", [])
 
 // Create a (MVC) controller passing its name and array of dependencies starting with $scope
-.controller("controller", ["$scope", "UsersService", "ListsService", "TasksService",
-    function($scope, UsersService, ListsService, TasksService) {
+.controller("controller", ["$scope", "$routeParams", "$location", "UsersService", "ListsService", "TasksService",
+    function($scope, $routeParams, $location, UsersService, ListsService, TasksService) {
     // Always create an object first and add properties/methods to it instead of $scope
     $scope.vm = {};
 
+    $scope.vm.lists = ListsService.Lists;
     $scope.vm.tasks = TasksService.Tasks;
+
+    if (!$routeParams || !$routeParams.listID) {
+        $location.path('/list/'+ $scope.vm.lists[0].listID);
+    } else {
+        $scope.vm.currentList = ListsService.findById(parseInt($routeParams.listID));
+        if (!$scope.vm.currentList) {
+            $location.path('/');
+        }
+    }
+
+    $scope.$watch(function(){return TasksService.Tasks;}, function(data){
+        if ($scope.vm.currentList) {
+            $scope.vm.currentTasks = [];
+            $scope.vm.taskCounts = [];
+            for (var idx in $scope.vm.lists) {
+                $scope.vm.taskCounts[$scope.vm.lists[idx].listID] = 0;
+            }
+            for (var idx in $scope.vm.tasks) {
+                var task = data[idx];
+                $scope.vm.taskCounts[task.listID]++;
+                if (task.listID === $scope.vm.currentList.listID) {
+                    $scope.vm.currentTasks.push(task);
+                }
+            }
+        }
+    }, true); // This 'true' argument is the key to getting the view to update automatically
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
@@ -69,7 +96,7 @@ angular.module("controller", [])
 
         $scope.save = function(){
             TasksService.save($scope.vm.task);
-            $location.path("/");
+            $location.path("/list/"+$scope.vm.task.listID);
         }
 }])
 .service("UsersService", function(){
@@ -101,6 +128,14 @@ angular.module("controller", [])
             dateUpdated: new Date("Apr 01 2017")
         }
     ];
+
+    listsService.findById = function(id) {
+        for (var idx in listsService.Lists) {
+            if (listsService.Lists[idx].listID === id) {
+                return listsService.Lists[idx];
+            }
+        }
+    }
 
     return listsService;
 })
