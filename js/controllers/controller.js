@@ -26,13 +26,12 @@ angular.module("controller", [])
     if ($scope.vm.currentList) {
         $scope.vm.currentTasks = [];
         $scope.vm.taskCounts = [];
+        for (var idx in $scope.vm.lists) {
+            $scope.vm.taskCounts[$scope.vm.lists[idx].listID] = 0;
+        }
         for (var idx in $scope.vm.tasks) {
             var task = $scope.vm.tasks[idx];
-            if (!$scope.vm.taskCounts[task.listID]) {
-                $scope.vm.taskCounts[task.listID] = 1;
-            } else {
-                $scope.vm.taskCounts[task.listID]++;
-            }
+            $scope.vm.taskCounts[task.listID]++;
             if (task.listID === $scope.vm.currentList.listID) {
                 $scope.vm.currentTasks.push(task);
             }
