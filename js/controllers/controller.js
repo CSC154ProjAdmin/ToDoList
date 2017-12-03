@@ -187,9 +187,32 @@ angular.module("controller", [])
         listWithStringDates.dateUpdated = new Date(listWithStringDates.dateUpdated);
     }
 
+    // Client-side ID generator (temporary; for pre-server/db integration)
+    var getNewID = function() {
+        var maxID = function() {
+            var max = -1;
+            for (var idx in listsService.Lists) {
+                if (listsService.Lists[idx].listID > max) {
+                    max = listsService.Lists[idx].listID;
+                }
+            }
+            return max;
+        }
+
+        if (listsService.newID) {
+            listsService.newID++;
+        } else {
+            listsService.newID = maxID() + 1;
+        }
+
+        return listsService.newID;
+    }
+
     listsService.save = function(list){
         if (list.listID == null) {
-            // TODO: Handle saving new list
+            //console.log("Saving new list.");
+            list.listID = getNewID();
+            listsService.Lists.push(list);
         } else {
             var listToEdit = listsService.findById(list.listID);
             if (listToEdit) {
