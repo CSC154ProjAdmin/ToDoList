@@ -180,6 +180,11 @@ angular.module("controller", [])
     function($scope, $routeParams, $location, UsersService){
         $scope.vm = {};
         $scope.vm.newUser = UsersService.createUser();
+
+        $scope.save = function(){
+            UsersService.save($scope.vm.newUser);
+            $location.path("/");
+        }
 }])
 .service("UsersService", function(){
     var usersService = {};
