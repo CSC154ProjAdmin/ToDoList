@@ -182,6 +182,25 @@ angular.module("controller", [])
 }])
 .service("UsersService", function(){
     var usersService = {};
+
+    usersService.Users = [
+        {
+            userID: 10, userName:"bob", email:"bob@email", password:"pw_bob",
+            dateCreated: new Date("Jan 01 2017"),
+            dateUpdated: new Date("Jan 01 2017")
+        },
+        {
+            userID: 20, userName:"jim", email:"jim@email", password:"pw_jim",
+            dateCreated: new Date("Feb 01 2017"),
+            dateUpdated: new Date("Feb 01 2017")
+        },
+        {
+            userID: 30, userName:"joe", email:"joe@email", password:"pw_joe",
+            dateCreated: new Date("Mar 01 2017"),
+            dateUpdated: new Date("Mar 01 2017")
+        }
+    ];
+
     return usersService;
 })
 .service("ListsService", function(){
