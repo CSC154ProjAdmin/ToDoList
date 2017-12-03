@@ -7,36 +7,45 @@
     </head>
     <body>
 -->    
-<div class="col-xs-12 col-sm-offset-5 col-sm-4">
-        <div id = "wrap">
-            <div id = "header">
-                <h1>Create an Account.</h1>
-            </div>
-            <div id = "main">
-                <p>Required fields are marked with an asterisk (*)</p>
-            <form action="" name="signupForm">
-
-                <p>* Username:</p>
-                <input type ="text" id ="username" required ng-model="vm.newUser.userName">
-
-                <p>* E-mail:</p>
-                <input type="text" id="email" required ng-model="vm.newUser.email">
-
-                <p>* Password:</p>
-                <input type ="password" id ="pass1" required ng-model="vm.newUser.password">
-
-                <p>* Repeat password:</p>
-                <input type ="password" id ="pass2" required>
+<div class="col-xs-12 col-sm-offset-4 col-sm-4">
+    <div id = "header">
+        <h1>Create an Account.</h1>
+    </div>
+    <div id = "main">
+        <p>Required fields are marked with an asterisk (*)</p>
+        <form action="" name="signupForm">
+            <div class="form-group">
                 <div class="form-group">
-                    <button type="button" class="btn" 
-                        ng-class="signupForm.$dirty && signupForm.$valid ? 'btn-success' : 'btn-disabled disabled'"
-                        ng-click="signupForm.$dirty && signupForm.$valid && save()">
-                        Create Account
-                    </button>
+                    <label for="username">* Username:</label>
+                    <input type ="text" id ="username" class="form-control" required placeholder="Username"
+                        ng-model="vm.newUser.userName">
                 </div>
 
-            </form>
-        </div>
+                <div class="form-group">
+                    <label for="email">* Email:</label>
+                    <input type ="text" id ="email" class="form-control" required placeholder="Email"
+                        ng-model="vm.newUser.email">
+                </div>
+
+                <div class="form-group">
+                    <label for="pass1">* Password:</label>
+                    <input type ="text" id ="pass1" class="form-control" required placeholder="Password"
+                        ng-model="vm.newUser.password">
+                </div>
+
+                <div class="form-group">
+                    <label for="pass2">* Repeat Password:</label>
+                    <input type ="text" id ="pass2" class="form-control" required placeholder="Repeat Password">
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn" 
+                    ng-class="signupForm.$dirty && signupForm.$valid ? 'btn-success' : 'btn-disabled disabled'"
+                    ng-click="signupForm.$dirty && signupForm.$valid && save()">
+                    Create Account
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 <!--    
