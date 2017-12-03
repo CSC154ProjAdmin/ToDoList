@@ -6,14 +6,22 @@
 angular.module("controller", [])
 
 // Create a (MVC) controller passing its name and array of dependencies starting with $scope
-.controller("controller", ["$scope", "UsersService", "ListsService", "TasksService",
-    function($scope, UsersService, ListsService, TasksService) {
+.controller("controller", ["$scope", "$routeParams", "$location", "UsersService", "ListsService", "TasksService",
+    function($scope, $routeParams, $location, UsersService, ListsService, TasksService) {
     // Always create an object first and add properties/methods to it instead of $scope
     $scope.vm = {};
 
     $scope.vm.lists = ListsService.Lists;
-    $scope.vm.currentList = $scope.vm.lists[0];  // TODO: set based on passed listID
     $scope.vm.tasks = TasksService.Tasks;
+
+    if (!$routeParams || !$routeParams.listID) {
+        $location.path('/list/'+ $scope.vm.lists[0].listID);
+    } else {
+        $scope.vm.currentList = ListsService.findById(parseInt($routeParams.listID));
+        if (!$scope.vm.currentList) {
+            $location.path('/');
+        }
+    }
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
@@ -103,6 +111,14 @@ angular.module("controller", [])
             dateUpdated: new Date("Apr 01 2017")
         }
     ];
+
+    listsService.findById = function(id) {
+        for (var idx in listsService.Lists) {
+            if (listsService.Lists[idx].listID === id) {
+                return listsService.Lists[idx];
+            }
+        }
+    }
 
     return listsService;
 })
