@@ -172,9 +172,19 @@ angular.module("controller", [])
             $location.path("/list/" + $scope.vm.list.listID);
         }
 }])
-.controller("LoginController", ["$scope", "$routeParams", "$location", 
-    function($scope, $routeParams, $location){
+.controller("LoginController", ["$scope", "$routeParams", "$location", "UsersService",
+    function($scope, $routeParams, $location, UsersService){
         $scope.vm = {};
+        $scope.vm.loginInfo = { identifier:"", password:"" };
+
+        $scope.login = function(){
+            if (UsersService.login($scope.vm.loginInfo)){
+                $location.path("/");
+            } else {
+                // TODO: set flags to update login GUI to invalid
+                alert("Invalid Credentials");
+            }
+        }
 }])
 .controller("RegistrationController", ["$scope", "$routeParams", "$location", "UsersService",
     function($scope, $routeParams, $location, UsersService){
@@ -195,6 +205,17 @@ angular.module("controller", [])
             dateCreated: new Date(),
             dateUpdated: new Date()
         };
+    }
+
+    usersService.login = function(loginInfo){
+        for (var idx in usersService.Users) {
+            var user = usersService.Users[idx];
+            if (loginInfo.password == user.password &&
+                (loginInfo.identifier == user.userName || 
+                 loginInfo.identifier == user.email)) {
+                return user;
+            }
+        }
     }
 
     usersService.Users = [
