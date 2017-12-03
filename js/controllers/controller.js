@@ -110,6 +110,7 @@ angular.module("controller", [])
 .controller("ListController", ["$scope", "$routeParams", "$location", "ListsService", 
     function($scope, $routeParams, $location, ListsService){
         $scope.vm = {};
+        $scope.vm.prevListID = $routeParams.prevListID || $routeParams.listID || '';
         if (!$routeParams.listID){
             // TODO: Create new list for userID
             //console.log("No listID sent. Creating new list.");
