@@ -112,8 +112,9 @@ angular.module("controller", [])
         $scope.vm = {};
         $scope.vm.prevListID = $routeParams.prevListID || $routeParams.listID || '';
         if (!$routeParams.listID){
-            // TODO: Create new list for userID
+            // TODO: Handle invalid userID.
             //console.log("No listID sent. Creating new list.");
+            $scope.vm.list = ListsService.createList(parseInt($routeParams.userID));
         } else {
             var listToEdit = ListsService.findById(parseInt($routeParams.listID));
             if (listToEdit && listToEdit.userID === parseInt($routeParams.userID)) {
@@ -136,6 +137,13 @@ angular.module("controller", [])
 })
 .service("ListsService", function(){
     var listsService = {};
+    listsService.createList = function(userID) {
+        return {
+            listID: null, userID: userID, listName:"",
+            dateCreated: new Date(),
+            dateUpdated: new Date()
+        };
+    }
 
     listsService.Lists = [
         {
