@@ -33,8 +33,7 @@
         </button>
     </div>
 
-    <!-- TODO: Replace hard-coded listID in "Add Task" url with Angular expression when List feature is ready -->
-    <a href="#/addTask/100" class="btn btn-lg btn-block btn-primary" style="margin-bottom: 10px;">
+    <a href="#/addTask/{{vm.currentList.listID}}" class="btn btn-lg btn-block btn-primary" style="margin-bottom: 10px;">
         <span class="glyphicon glyphicon-plus"></span>
         Add Task
     </a>
