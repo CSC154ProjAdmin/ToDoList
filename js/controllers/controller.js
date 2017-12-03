@@ -373,7 +373,6 @@ angular.module("controller", [])
         } else {
             var listToEdit = listsService.findById(list.listID);
             if (listToEdit) {
-                // TODO: Set to new values
                 listToEdit.listName = list.listName;
             }
         }
@@ -497,7 +496,6 @@ angular.module("controller", [])
          } else {
             var taskToEdit = tasksService.findById(task.taskID);
             if (taskToEdit) {
-                // TODO: Set to new values
                 taskToEdit.taskName = task.taskName;
                 taskToEdit.dateDue = task.dateDue;
             }
