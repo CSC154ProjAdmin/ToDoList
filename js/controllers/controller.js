@@ -107,6 +107,28 @@ angular.module("controller", [])
             $location.path("/list/"+$scope.vm.task.listID);
         }
 }])
+.controller("ListController", ["$scope", "$routeParams", "$location", "ListsService", 
+    function($scope, $routeParams, $location, ListsService){
+        $scope.vm = {};
+        if (!$routeParams.listID){
+            // TODO: Create new list for userID
+            //console.log("No listID sent. Creating new list.");
+        } else {
+            var listToEdit = ListsService.findById(parseInt($routeParams.listID));
+            if (listToEdit && listToEdit.userID === parseInt($routeParams.userID)) {
+                //console.log("List found: Cloning for edit");
+                $scope.vm.list = ListsService.cloneList(listToEdit);
+            } else {
+                //console.log("Invalid user or list ID. Redirecting home.");
+                $location.path("/");
+            }
+        }
+ 
+        $scope.save = function(){
+            ListsService.save($scope.vm.list);
+            $location.path("/list/" + $scope.vm.list.listID);
+        }
+}])
 .service("UsersService", function(){
     var usersService = {};
     return usersService;
