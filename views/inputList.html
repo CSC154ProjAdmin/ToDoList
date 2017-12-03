@@ -1,0 +1,29 @@
+<div class="col-xs-12">
+    <div class="jumbotron text-center">
+        <h1 ng-show="vm.list.listID == null">Add List</h1>
+        <h1 ng-show="vm.list.listID != null">Edit List</h1>
+    </div>
+    <form name="listForm">
+        <div class="form-group">
+            <div class="form-group">
+                <label for="name">List Name</label>
+                <input id="name" class="form-control" required placeholder="Enter list name"
+                ng-model="vm.list.listName">
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-lg btn-block" 
+                ng-class="listForm.$dirty && listForm.$valid ? 'btn-success' : 'btn-disabled disabled'"
+                ng-click="listForm.$dirty && listForm.$valid && save()">
+                <span class="glyphicon glyphicon-pushpin"></span>
+                Save
+            </button>
+        </div>
+        <div class="form-group">
+            <a href="#/list/{{vm.prevListID}}" class="btn btn-lg btn-block btn-default">
+                <span class="glyphicon glyphicon-remove"></span>
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
