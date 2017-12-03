@@ -23,7 +23,8 @@ angular.module("controller", [])
         }
     }
 
-    $scope.$watch(function(){return TasksService.Tasks;}, function(data){
+    var countAndFilterTasks = function(){
+        //console.log("Counting and filtering tasks.");
         if ($scope.vm.currentList) {
             $scope.vm.currentTasks = [];
             $scope.vm.taskCounts = [];
@@ -31,14 +32,14 @@ angular.module("controller", [])
                 $scope.vm.taskCounts[$scope.vm.lists[idx].listID] = 0;
             }
             for (var idx in $scope.vm.tasks) {
-                var task = data[idx];
+                var task = $scope.vm.tasks[idx];
                 $scope.vm.taskCounts[task.listID]++;
                 if (task.listID === $scope.vm.currentList.listID) {
                     $scope.vm.currentTasks.push(task);
                 }
             }
         }
-    }, true); // This 'true' argument is the key to getting the view to update automatically
+    }();
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
@@ -46,6 +47,13 @@ angular.module("controller", [])
     
     $scope.deleteTask = function(task){
         TasksService.deleteTask(task);
+        //console.log("Removing deleted task from current tasklist and updating count.");
+        var idx = $scope.vm.currentTasks.indexOf(task);
+        var wasFound = (idx != -1);
+        if (wasFound) {
+            $scope.vm.currentTasks.splice(idx, 1);
+            $scope.vm.taskCounts[task.listID]--;
+        }
     }
 
     $scope.prettyDatetime = function(ugly, useSeconds){
