@@ -151,7 +151,7 @@ angular.module("controller", [])
             combinedDatetime.setHours($scope.vm.time.getHours());
             combinedDatetime.setMinutes($scope.vm.time.getMinutes());
             alert($scope.vm.day + "\n" + $scope.vm.time + "\n\n" + combinedDatetime);
-            $scope.vm.task.dueDate = combinedDatetime;
+            $scope.vm.task.dateDue = combinedDatetime;
             TasksService.save($scope.vm.task);
             $location.path("/list/"+$scope.vm.task.listID);
         }
@@ -492,6 +492,7 @@ angular.module("controller", [])
             if (taskToEdit) {
                 // TODO: Set to new values
                 taskToEdit.taskName = task.taskName;
+                taskToEdit.dateDue = task.dateDue;
             }
         }
     }
