@@ -20,6 +20,14 @@ app.config(function($routeProvider, $locationProvider) {
             templateUrl: "views/mainview.html",
             controller: "controller"
         })
+        .when("/addList/:userID/:prevListID", {
+            templateUrl: "views/inputList.html",
+            controller: "ListController"
+        })
+        .when("/editList/:userID/:listID", {
+            templateUrl: "views/inputList.html",
+            controller: "ListController"
+        })
         .when("/addTask/:listID", {
             templateUrl: "views/inputTask.html",
             controller: "TaskController"

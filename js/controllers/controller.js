@@ -107,6 +107,29 @@ angular.module("controller", [])
             $location.path("/list/"+$scope.vm.task.listID);
         }
 }])
+.controller("ListController", ["$scope", "$routeParams", "$location", "ListsService", 
+    function($scope, $routeParams, $location, ListsService){
+        $scope.vm = {};
+        $scope.vm.prevListID = $routeParams.prevListID || $routeParams.listID || '';
+        if (!$routeParams.listID){
+            // TODO: Create new list for userID
+            //console.log("No listID sent. Creating new list.");
+        } else {
+            var listToEdit = ListsService.findById(parseInt($routeParams.listID));
+            if (listToEdit && listToEdit.userID === parseInt($routeParams.userID)) {
+                //console.log("List found: Cloning for edit");
+                $scope.vm.list = ListsService.cloneList(listToEdit);
+            } else {
+                //console.log("Invalid user or list ID. Redirecting home.");
+                $location.path("/");
+            }
+        }
+ 
+        $scope.save = function(){
+            ListsService.save($scope.vm.list);
+            $location.path("/list/" + $scope.vm.list.listID);
+        }
+}])
 .service("UsersService", function(){
     var usersService = {};
     return usersService;
@@ -141,6 +164,29 @@ angular.module("controller", [])
         for (var idx in listsService.Lists) {
             if (listsService.Lists[idx].listID === id) {
                 return listsService.Lists[idx];
+            }
+        }
+    }
+
+    listsService.cloneList = function(listToClone){
+        var clonedList = JSON.parse(JSON.stringify(listToClone));
+        restoreDates(clonedList);
+        return clonedList;
+    }
+
+    var restoreDates = function(listWithStringDates){
+        listWithStringDates.dateCreated = new Date(listWithStringDates.dateCreated);
+        listWithStringDates.dateUpdated = new Date(listWithStringDates.dateUpdated);
+    }
+
+    listsService.save = function(list){
+        if (list.listID == null) {
+            // TODO: Handle saving new list
+        } else {
+            var listToEdit = listsService.findById(list.listID);
+            if (listToEdit) {
+                // TODO: Set to new values
+                listToEdit.listName = list.listName;
             }
         }
     }
