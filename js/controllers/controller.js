@@ -128,18 +128,21 @@ angular.module("controller", [])
 .controller("TaskController", ["$scope", "$routeParams", "$location", "TasksService", 
     function($scope, $routeParams, $location, TasksService){
         $scope.vm = {};
-        $scope.vm.day = "";
-        $scope.vm.time = "";
 
         if (!$routeParams.taskID){
             // TODO: Handle invalid listID. Likely just need to search task list.
             //console.log("No taskID sent. Creating new task.");
             $scope.vm.task = TasksService.createTask(parseInt($routeParams.listID));
+            $scope.vm.day = new Date();
+            $scope.vm.time = new Date("1970-01-01T12:00:00.000");
         } else {
             var taskToEdit = TasksService.findById(parseInt($routeParams.taskID));
             if (taskToEdit && taskToEdit.listID === parseInt($routeParams.listID)) {
                 //console.log("Task found: Cloning for edit");
                 $scope.vm.task = TasksService.cloneTask(taskToEdit);
+                $scope.vm.day = new Date($scope.vm.task.dateDue);
+                $scope.vm.time = new Date($scope.vm.task.dateDue);
+                $scope.vm.time.setSeconds(0);
             } else {
                 //console.log("Invalid list or task ID. Redirecting home.");
                 $location.path("/");
@@ -150,6 +153,7 @@ angular.module("controller", [])
             var combinedDatetime = new Date($scope.vm.day);
             combinedDatetime.setHours($scope.vm.time.getHours());
             combinedDatetime.setMinutes($scope.vm.time.getMinutes());
+            combinedDatetime.setSeconds(0);
             alert($scope.vm.day + "\n" + $scope.vm.time + "\n\n" + combinedDatetime);
             $scope.vm.task.dateDue = combinedDatetime;
             TasksService.save($scope.vm.task);
