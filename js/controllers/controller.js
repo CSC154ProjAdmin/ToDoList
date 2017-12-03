@@ -83,6 +83,47 @@ angular.module("controller", [])
         var pretty = date.join("/") + " " + time.join(":") + " " + suffix;
         return pretty;
     }    
+
+    $scope.deleteList = function(list) {
+        if ($scope.vm.lists.length > 1) {
+            confirm2Btn("Delete List", "Are you sure you want to delete \"" +
+                list.listName.toUpperCase() + "\"?", "No", "Yes",
+                function(){ListsService.deleteList(list);});
+        }
+    }
+
+    function confirm2Btn(heading, question, cancelButtonTxt, okButtonTxt, callback) {
+        var confirmModal = 
+          $('<div class="modal fade" tabindex="-1" role="dialog">' +    
+                '<div class="modal-dialog" role="document">' +
+                    '<div class="modal-content">'+
+                        '<div class="modal-header">' +
+                            '<a class="close" data-dismiss="modal" >&times;</a>' +
+                            '<h4 class="modal-title">' + heading +'</h4>' +
+                        '</div>' +
+                        '<div class="modal-body">' +
+                            '<p>' + question + '</p>' +
+                        '</div>' +
+                        '<div class="modal-footer">' +
+                            '<a href="#" class="btn btn-default" data-dismiss="modal">' + 
+                                cancelButtonTxt + 
+                            '</a>' +
+                            '<a href="#" id="okButton" class="btn btn-primary">' + 
+                                okButtonTxt + 
+                            '</a>' +
+                        '</div>' +
+                    '</div>'+
+                '</div>' +
+            '</div>');
+
+        confirmModal.find('#okButton').click(function(event) {
+          callback();
+          confirmModal.modal('hide');
+        });
+
+        confirmModal.modal('show');
+    };
+
 }])
 .controller("TaskController", ["$scope", "$routeParams", "$location", "TasksService", 
     function($scope, $routeParams, $location, TasksService){
@@ -143,6 +184,15 @@ angular.module("controller", [])
             dateCreated: new Date(),
             dateUpdated: new Date()
         };
+    }
+
+    listsService.deleteList = function(list){
+        var idx = listsService.Lists.indexOf(list);
+        var wasFound = (idx != -1);
+        if (wasFound) {
+            //console.log("Deleting listID: " + list.listID);
+            listsService.Lists.splice(idx, 1);
+        }
     }
 
     listsService.Lists = [
