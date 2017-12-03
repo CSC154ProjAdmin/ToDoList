@@ -128,6 +128,9 @@ angular.module("controller", [])
 .controller("TaskController", ["$scope", "$routeParams", "$location", "TasksService", 
     function($scope, $routeParams, $location, TasksService){
         $scope.vm = {};
+        $scope.vm.day = "";
+        $scope.vm.time = "";
+
         if (!$routeParams.taskID){
             // TODO: Handle invalid listID. Likely just need to search task list.
             //console.log("No taskID sent. Creating new task.");
@@ -144,6 +147,11 @@ angular.module("controller", [])
         }
 
         $scope.save = function(){
+            var combinedDatetime = new Date($scope.vm.day);
+            combinedDatetime.setHours($scope.vm.time.getHours());
+            combinedDatetime.setMinutes($scope.vm.time.getMinutes());
+            alert($scope.vm.day + "\n" + $scope.vm.time + "\n\n" + combinedDatetime);
+            $scope.vm.task.dueDate = combinedDatetime;
             TasksService.save($scope.vm.task);
             $location.path("/list/"+$scope.vm.task.listID);
         }
