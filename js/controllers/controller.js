@@ -179,6 +179,17 @@ angular.module("controller", [])
         listWithStringDates.dateUpdated = new Date(listWithStringDates.dateUpdated);
     }
 
+    listsService.save = function(list){
+        if (list.listID == null) {
+            // TODO: Handle saving new list
+        } else {
+            var listToEdit = listsService.findById(list.listID);
+            if (listToEdit) {
+                // TODO: Set to new values
+            }
+        }
+    }
+
     return listsService;
 })
 .service("TasksService", function(){
