@@ -95,7 +95,7 @@ angular.module("controller", [])
 
         $scope.save = function(){
             TasksService.save($scope.vm.task);
-            $location.path("/");
+            $location.path("/list/"+$scope.vm.task.listID);
         }
 }])
 .service("UsersService", function(){
