@@ -176,12 +176,26 @@ angular.module("controller", [])
     function($scope, $routeParams, $location){
         $scope.vm = {};
 }])
-.controller("RegistrationController", ["$scope", "$routeParams", "$location", 
-    function($scope, $routeParams, $location){
+.controller("RegistrationController", ["$scope", "$routeParams", "$location", "UsersService",
+    function($scope, $routeParams, $location, UsersService){
         $scope.vm = {};
+        $scope.vm.newUser = UsersService.createUser();
+
+        $scope.save = function(){
+            UsersService.save($scope.vm.newUser);
+            $location.path("/");
+        }
 }])
 .service("UsersService", function(){
     var usersService = {};
+
+    usersService.createUser = function() {
+        return {
+            userID: null, userName: "", email:"", password:"",
+            dateCreated: new Date(),
+            dateUpdated: new Date()
+        };
+    }
 
     usersService.Users = [
         {
@@ -200,6 +214,36 @@ angular.module("controller", [])
             dateUpdated: new Date("Mar 01 2017")
         }
     ];
+
+    var getNewID = function(){
+        var maxID = function(){
+            var max = -1;
+            for (var idx in usersService.Users){
+                if (usersService.Users[idx].userID > max) {
+                    max = usersService.Users[idx].userID;
+                }
+            }
+            return max;
+        }
+
+        if (usersService.newID) {
+            usersService.newID++;
+        } else {
+            usersService.newID = maxID() + 1;
+        }
+
+        return usersService.newID;
+    }
+
+    usersService.save = function(user){
+        if (user.userID == null) {
+            //console.log("Saving new user.");
+            user.userID = getNewID();
+            usersService.Users.push(user);
+        } else {
+            // TODO: Handle updating existing user
+        }
+    }
 
     return usersService;
 })
