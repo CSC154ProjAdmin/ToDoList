@@ -176,12 +176,21 @@ angular.module("controller", [])
     function($scope, $routeParams, $location){
         $scope.vm = {};
 }])
-.controller("RegistrationController", ["$scope", "$routeParams", "$location", 
-    function($scope, $routeParams, $location){
+.controller("RegistrationController", ["$scope", "$routeParams", "$location", "UsersService",
+    function($scope, $routeParams, $location, UsersService){
         $scope.vm = {};
+        $scope.vm.newUser = UsersService.createUser();
 }])
 .service("UsersService", function(){
     var usersService = {};
+
+    usersService.createUser = function() {
+        return {
+            userID: null, userName: "", email:"", password:"",
+            dateCreated: new Date(),
+            dateUpdated: new Date()
+        };
+    }
 
     usersService.Users = [
         {
