@@ -78,6 +78,30 @@ angular.module("controller", [])
 })
 .service("ListsService", function(){
     var listsService = {};
+
+    listsService.Lists = [
+        {
+            listID:100, userID: 10, listName:"dummy tasks", 
+            dateCreated: new Date("Jan 01 2017"),
+            dateUpdated: new Date("Jan 01 2017")
+        },
+        {
+            listID:101, userID: 10, listName:"groceries",
+            dateCreated: new Date("Feb 01 2017"),
+            dateUpdated: new Date("Feb 01 2017")
+        },
+        {
+            listID:102, userID: 10, listName:"chores",
+            dateCreated: new Date("Mar 01 2017"),
+            dateUpdated: new Date("Mar 01 2017")
+        },
+        {
+            listID:103, userID: 10, listName:"homework",
+            dateCreated: new Date("Apr 01 2017"),
+            dateUpdated: new Date("Apr 01 2017")
+        }
+    ];
+
     return listsService;
 })
 .service("TasksService", function(){
