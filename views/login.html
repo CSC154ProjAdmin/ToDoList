@@ -23,7 +23,11 @@
         </div>
           
         <div class="form-group">
-            <a href="#" class="btn btn-primary" id="btn1">Sign In</a> <!-- End Btn -->
+            <button type="button" class="btn" id="btn1"
+                ng-class="loginForm.$dirty && loginForm.$valid ? 'btn-success' : 'btn-disabled disabled'"
+                ng-click="loginForm.$dirty && loginForm.$valid && login()">
+                Sign In
+            </button> <!-- End Btn -->
             <a href="#/signup" class="btn btn-default" id="btn2">Sign Up</a> <!-- End Btn2 -->
         </div>
     </form>
