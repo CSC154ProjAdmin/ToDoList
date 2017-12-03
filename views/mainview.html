@@ -40,7 +40,7 @@
     <ul class="list-group">
         <li class="list-group-item text-center clearfix" ng-show="vm.tasks.length == 0">NO TASKS IN LIST</li>
         <li class="list-group-item text-center clearfix"
-            ng-repeat="task in vm.tasks">
+            ng-repeat="task in vm.currentTasks">
             <!-- Toggle button -->
             <button type="button" class="btn btn-sm pull-left" ng-click="toggleComplete(task)"
                 ng-class="task.isComplete ? 'btn-success' : 'btn-info'">
