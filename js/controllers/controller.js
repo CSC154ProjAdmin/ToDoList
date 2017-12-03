@@ -11,6 +11,8 @@ angular.module("controller", [])
     // Always create an object first and add properties/methods to it instead of $scope
     $scope.vm = {};
 
+    $scope.vm.lists = ListsService.Lists;
+    $scope.vm.currentList = $scope.vm.lists[0];  // TODO: set based on passed listID
     $scope.vm.tasks = TasksService.Tasks;
 
     $scope.toggleComplete = function(task){
