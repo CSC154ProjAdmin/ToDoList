@@ -29,19 +29,26 @@
 
                 <div class="form-group">
                     <label for="pass1">* Password:</label>
-                    <input type ="password" id ="pass1" class="form-control" required placeholder="Password"
+                    <input type ="password" name ="pass1" class="form-control" required placeholder="Password"
                         ng-model="vm.newUser.password">
                 </div>
 
                 <div class="form-group">
                     <label for="pass2">* Repeat Password:</label>
-                    <input type ="password" id ="pass2" class="form-control" required placeholder="Repeat Password">
+                    <span ng-show="signupForm.pass1.$dirty && signupForm.pass2.$dirty &&
+                        vm.newUser.password != vm.newUser.passwordConfirm" style="color: #FF0000;">
+                        * Passwords must match
+                    </span>
+                    <input type ="password" name ="pass2" class="form-control" required placeholder="Repeat Password"
+                        ng-model="vm.newUser.passwordConfirm">
                 </div>
             </div>
             <div class="form-group">
                 <button type="button" class="btn" 
-                    ng-class="signupForm.$dirty && signupForm.$valid ? 'btn-primary' : 'btn-disabled disabled'"
-                    ng-click="signupForm.$dirty && signupForm.$valid && save()">
+                    ng-class="signupForm.$dirty && signupForm.$valid  &&
+                    vm.newUser.password == vm.newUser.passwordConfirm ? 'btn-primary' : 'btn-disabled disabled'"
+                    ng-click="signupForm.$dirty && signupForm.$valid  &&
+                    vm.newUser.password == vm.newUser.passwordConfirm && save()">
                     Create Account
                 </button>
             </div>
