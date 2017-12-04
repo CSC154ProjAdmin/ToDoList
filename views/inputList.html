@@ -7,8 +7,12 @@
         <div class="form-group">
             <div class="form-group">
                 <label for="name">List Name</label>
-                <input id="name" class="form-control" required placeholder="Enter list name"
-                ng-model="vm.list.listName">
+                <span ng-show="listForm.name.$dirty && listForm.name.$invalid" style="color: #FF0000;">
+                    * Invalid list name. Use letters, numbers, spaces, and ( ) - _ symbols
+                </span>
+                <input name="name" class="form-control" required placeholder="Enter list name"
+                ng-model="vm.list.listName"
+                required ng-pattern="/^[a-zA-z0-9\(\)\-_]+( +[a-zA-z0-9\(\)\-_]+)*$/">
             </div>
         </div>
         <div class="form-group">
