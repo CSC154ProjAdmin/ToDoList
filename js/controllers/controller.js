@@ -196,8 +196,7 @@ angular.module("controller", [])
             if (UsersService.login($scope.vm.loginInfo)){
                 $location.path("/");
             } else {
-                // TODO: set flags to update login GUI to invalid
-                alert("Invalid Credentials");
+                $scope.vm.hasFailedLogin = true;
             }
         }
 }])
