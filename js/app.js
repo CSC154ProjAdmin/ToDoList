@@ -4,7 +4,7 @@
 */
 
 // Create the main application module
-var app = angular.module("appname", ["ngRoute", "controller"]);
+var app = angular.module("PrioriTask", ["ngRoute", "controller"]);
 
 // Set up routing for single-page application
 app.config(function($routeProvider, $locationProvider) {
