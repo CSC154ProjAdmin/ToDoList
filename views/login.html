@@ -32,6 +32,12 @@
             </button> <!-- End Btn -->
             <a href="#/signup" class="btn btn-default" id="btn2">Sign Up</a> <!-- End Btn2 -->
         </div>
+        <div class="alert alert-danger" role="alert"
+        ng-show="vm.hasFailedLogin">
+            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+            <span class="sr-only">Error:</span>
+            Invalid credentials. Try again.
+        </div>
     </form>
     <p>
         Forgot your password?
