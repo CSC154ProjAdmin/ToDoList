@@ -128,15 +128,21 @@ angular.module("controller", [])
 .controller("TaskController", ["$scope", "$routeParams", "$location", "TasksService", 
     function($scope, $routeParams, $location, TasksService){
         $scope.vm = {};
+
         if (!$routeParams.taskID){
             // TODO: Handle invalid listID. Likely just need to search task list.
             //console.log("No taskID sent. Creating new task.");
             $scope.vm.task = TasksService.createTask(parseInt($routeParams.listID));
+            $scope.vm.day = new Date();
+            $scope.vm.time = new Date("1970-01-01T12:00:00.000");
         } else {
             var taskToEdit = TasksService.findById(parseInt($routeParams.taskID));
             if (taskToEdit && taskToEdit.listID === parseInt($routeParams.listID)) {
                 //console.log("Task found: Cloning for edit");
                 $scope.vm.task = TasksService.cloneTask(taskToEdit);
+                $scope.vm.day = new Date($scope.vm.task.dateDue);
+                $scope.vm.time = new Date($scope.vm.task.dateDue);
+                $scope.vm.time.setSeconds(0);
             } else {
                 //console.log("Invalid list or task ID. Redirecting home.");
                 $location.path("/");
@@ -144,8 +150,17 @@ angular.module("controller", [])
         }
 
         $scope.save = function(){
+            $scope.vm.task.dateDue = combineDateAndTime($scope.vm.day, $scope.vm.time);
             TasksService.save($scope.vm.task);
             $location.path("/list/"+$scope.vm.task.listID);
+        }
+
+        var combineDateAndTime = function(date, time) {
+            var combined = new Date(date);
+            combined.setHours(time.getHours());
+            combined.setMinutes(time.getMinutes());
+            combined.setSeconds(0);
+            return combined;
         }
 }])
 .controller("ListController", ["$scope", "$routeParams", "$location", "ListsService", 
@@ -358,7 +373,6 @@ angular.module("controller", [])
         } else {
             var listToEdit = listsService.findById(list.listID);
             if (listToEdit) {
-                // TODO: Set to new values
                 listToEdit.listName = list.listName;
             }
         }
@@ -482,8 +496,8 @@ angular.module("controller", [])
          } else {
             var taskToEdit = tasksService.findById(task.taskID);
             if (taskToEdit) {
-                // TODO: Set to new values
                 taskToEdit.taskName = task.taskName;
+                taskToEdit.dateDue = task.dateDue;
             }
         }
     }
