@@ -330,7 +330,7 @@ angular.module("controller", [])
 
     return usersService;
 }])
-.service("ListsService", function(){
+.service("ListsService", ["$http", function($http){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
     var urlReadList = urlRoot + "data/list_data.json";
@@ -383,6 +383,19 @@ angular.module("controller", [])
             dateUpdated: new Date("Apr 01 2017")
         }
     ];
+
+    listsService.readLists = function(){
+        return $http.get(urlReadList)
+        .then(function success(response){
+            //console.log("Lists read from server");
+            listsService.Lists = response.data;
+            for (var idx in listsService.Lists) {
+                restoreDates(listsService.Lists[idx]);
+            }
+        }, function error(response){
+            alert(response.status);
+        });
+    };
 
     listsService.findById = function(id) {
         for (var idx in listsService.Lists) {
@@ -438,7 +451,7 @@ angular.module("controller", [])
     }
 
     return listsService;
-})
+}])
 .service("TasksService", function(){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
