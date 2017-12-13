@@ -210,7 +210,7 @@ angular.module("controller", [])
             $location.path("/");
         }
 }])
-.service("UsersService", function(){
+.service("UsersService", ["$http", function($http){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
     var urlReadUser = urlRoot + "data/user_data.json";
@@ -243,7 +243,7 @@ angular.module("controller", [])
             }
         }
     }
-
+/*
     usersService.Users = [
         {
             userID: 10, userName:"bob", email:"bob@email", password:"pw_bob",
@@ -261,6 +261,23 @@ angular.module("controller", [])
             dateUpdated: new Date("Mar 01 2017")
         }
     ];
+*/
+    var restoreDates = function(userWithStringDates){
+        userWithStringDates.dateCreated = new Date(userWithStringDates.dateCreated);
+        userWithStringDates.dateUpdated = new Date(userWithStringDates.dateUpdated);
+    }
+
+    var readUsers = function(){
+        $http.get(urlReadUser)
+        .then(function success(response){
+            usersService.Users = response.data;
+            for (var idx in usersService.Users) {
+                restoreDates(usersService.Users[idx]);
+            }
+        }, function error(response){
+            alert(response.status);
+        });
+    }();
 
     var getNewID = function(){
         var maxID = function(){
@@ -285,15 +302,34 @@ angular.module("controller", [])
     usersService.save = function(user){
         if (user.userID == null) {
             //console.log("Saving new user.");
+
+            /* Client-side user creation
             user.userID = getNewID();
             usersService.Users.push(user);
+            // */
+
+            //* Server-side user creation
+            // Return promise for post-creation needs
+            return $http.post(urlCreateUser, user)
+            .then(function success(response){
+                //console.log("Success - user added on server");
+                if (response.data.newId) {
+                    //console.log("Pushing user to array");
+                    user.userID = response.data.newId;
+                    usersService.Users.push(user);
+                }
+            }, function error(response, status){
+                // TODO: Handle failure to create user
+                //console.log("Failure - user not added on server");
+            });
+            // */
         } else {
             // TODO: Handle updating existing user
         }
     }
 
     return usersService;
-})
+}])
 .service("ListsService", function(){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
