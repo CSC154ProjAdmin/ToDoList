@@ -1,0 +1,38 @@
+[
+    {
+        "taskID": 1001, "listID": 100, "taskName": "DUMMY1001", "isComplete": false, 
+        "dateDue": "Dec 01, 2017",
+        "dateCreated": "Nov 01, 2017",
+        "dateUpdated": "Nov 01, 2017"
+    },
+    {
+        "taskID": 1002, "listID": 100, "taskName": "DUMMY1002", "isComplete": true, 
+        "dateDue": "Dec 02, 2017",
+        "dateCreated": "Nov 02, 2017",
+        "dateUpdated": "Nov 02, 2017"
+    },
+    {
+        "taskID": 1003, "listID": 100, "taskName": "DUMMY1003", "isComplete": false, 
+        "dateDue": "Dec 03, 2017",
+        "dateCreated": "Nov 03, 2017",
+        "dateUpdated": "Nov 03, 2017"
+    },
+    {
+        "taskID": 1004, "listID": 100, "taskName": "DUMMY1004", "isComplete": true, 
+        "dateDue": "Dec 04, 2017",
+        "dateCreated": "Oct 01, 2017",
+        "dateUpdated": "Oct 01, 2017"
+    },
+    {
+        "taskID": 1005, "listID": 100, "taskName": "DUMMY1005", "isComplete": false, 
+        "dateDue": "Dec 05, 2017",
+        "dateCreated": "Oct 01, 2017",
+        "dateUpdated": "Nov 01, 2017"
+    },
+    {
+        "taskID": 1006, "listID": 100, "taskName": "DUMMY1006", "isComplete": true, 
+        "dateDue": "2017-12-06T23:59:59",
+        "dateCreated": "2017-11-01T12:00:00",
+        "dateUpdated": "2017-11-01T18:00:00"
+    }
+]
