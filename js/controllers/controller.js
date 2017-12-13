@@ -302,8 +302,27 @@ angular.module("controller", [])
     usersService.save = function(user){
         if (user.userID == null) {
             //console.log("Saving new user.");
+
+            /* Client-side user creation
             user.userID = getNewID();
             usersService.Users.push(user);
+            // */
+
+            //* Server-side user creation
+            // Return promise for post-creation needs
+            return $http.post(urlCreateUser, user)
+            .then(function success(response){
+                //console.log("Success - user added on server");
+                if (response.data.newId) {
+                    //console.log("Pushing user to array");
+                    user.userID = response.data.newId;
+                    usersService.Users.push(user);
+                }
+            }, function error(response, status){
+                // TODO: Handle failure to create user
+                //console.log("Failure - user not added on server");
+            });
+            // */
         } else {
             // TODO: Handle updating existing user
         }
