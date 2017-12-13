@@ -295,6 +295,18 @@ angular.module("controller", [])
     return usersService;
 })
 .service("ListsService", function(){
+    var urlRoot = "";
+    //var urlRoot = "CSC154ToDoList/";
+    var urlReadList = urlRoot + "data/list_data.json";
+    var urlCreateList = urlRoot + "data/list_added.json";
+    var urlUpdateList = urlRoot + "data/list_updated.json";
+    var urlDeleteList = urlRoot + "data/list_deleted.json";
+
+    // var urlReadList = urlRoot + "php/list_read.php";
+    // var urlCreateList = urlRoot + "php/list_create.php";
+    // var urlUpdateList = urlRoot + "php/list_update.php";
+    // var urlDeleteList = urlRoot + "php/list_delete.php";
+
     var listsService = {};
     listsService.createList = function(userID) {
         return {
