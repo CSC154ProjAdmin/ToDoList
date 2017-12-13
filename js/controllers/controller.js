@@ -211,6 +211,18 @@ angular.module("controller", [])
         }
 }])
 .service("UsersService", function(){
+    var urlRoot = "";
+    //var urlRoot = "CSC154ToDoList/";
+    var urlReadUser = urlRoot + "data/user_data.json";
+    var urlCreateUser = urlRoot + "data/user_added.json";
+    var urlUpdateUser = urlRoot + "data/user_updated.json";
+    var urlDeleteUser = urlRoot + "data/user_deleted.json";
+
+    // var urlReadUser = urlRoot + "php/user_read.php";
+    // var urlCreateUser = urlRoot + "php/user_create.php";
+    // var urlUpdateUser = urlRoot + "php/user_update.php";
+    // var urlDeleteUser = urlRoot + "php/user_delete.php";
+
     var usersService = {};
 
     usersService.createUser = function() {
@@ -283,6 +295,18 @@ angular.module("controller", [])
     return usersService;
 })
 .service("ListsService", function(){
+    var urlRoot = "";
+    //var urlRoot = "CSC154ToDoList/";
+    var urlReadList = urlRoot + "data/list_data.json";
+    var urlCreateList = urlRoot + "data/list_added.json";
+    var urlUpdateList = urlRoot + "data/list_updated.json";
+    var urlDeleteList = urlRoot + "data/list_deleted.json";
+
+    // var urlReadList = urlRoot + "php/list_read.php";
+    // var urlCreateList = urlRoot + "php/list_create.php";
+    // var urlUpdateList = urlRoot + "php/list_update.php";
+    // var urlDeleteList = urlRoot + "php/list_delete.php";
+
     var listsService = {};
     listsService.createList = function(userID) {
         return {
@@ -380,6 +404,18 @@ angular.module("controller", [])
     return listsService;
 })
 .service("TasksService", function(){
+    var urlRoot = "";
+    //var urlRoot = "CSC154ToDoList/";
+    var urlReadTask = urlRoot + "data/task_data.json";
+    var urlCreateTask = urlRoot + "data/task_added.json";
+    var urlUpdateTask = urlRoot + "data/task_updated.json";
+    var urlDeleteTask = urlRoot + "data/task_deleted.json";
+
+    // var urlReadTask = urlRoot + "php/task_read.php";
+    // var urlCreateTask = urlRoot + "php/task_create.php";
+    // var urlUpdateTask = urlRoot + "php/task_update.php";
+    // var urlDeleteTask = urlRoot + "php/task_delete.php";
+
     var tasksService = {};
     tasksService.createTask = function(listID) {
         return {
