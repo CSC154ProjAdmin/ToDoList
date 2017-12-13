@@ -210,7 +210,7 @@ angular.module("controller", [])
             $location.path("/");
         }
 }])
-.service("UsersService", function(){
+.service("UsersService", ["$http", function($http){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
     var urlReadUser = urlRoot + "data/user_data.json";
@@ -243,7 +243,7 @@ angular.module("controller", [])
             }
         }
     }
-
+/*
     usersService.Users = [
         {
             userID: 10, userName:"bob", email:"bob@email", password:"pw_bob",
@@ -261,11 +261,23 @@ angular.module("controller", [])
             dateUpdated: new Date("Mar 01 2017")
         }
     ];
-
+*/
     var restoreDates = function(userWithStringDates){
         userWithStringDates.dateCreated = new Date(userWithStringDates.dateCreated);
         userWithStringDates.dateUpdated = new Date(userWithStringDates.dateUpdated);
     }
+
+    var readUsers = function(){
+        $http.get(urlReadUser)
+        .then(function success(response){
+            usersService.Users = response.data;
+            for (var idx in usersService.Users) {
+                restoreDates(usersService.Users[idx]);
+            }
+        }, function error(response){
+            alert(response.status);
+        });
+    }();
 
     var getNewID = function(){
         var maxID = function(){
@@ -298,7 +310,7 @@ angular.module("controller", [])
     }
 
     return usersService;
-})
+}])
 .service("ListsService", function(){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
