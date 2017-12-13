@@ -1,0 +1,22 @@
+[
+    {
+        "listID":100, "userID": 10, "listName":"dummy tasks", 
+        "dateCreated": "Jan 01 2017",
+        "dateUpdated": "Jan 01 2017"
+    },
+    {
+        "listID":101, "userID": 10, "listName":"groceries",
+        "dateCreated": "Feb 01 2017",
+        "dateUpdated": "Feb 01 2017"
+    },
+    {
+        "listID":102, "userID": 10, "listName":"chores",
+        "dateCreated": "Mar 01 2017",
+        "dateUpdated": "Mar 01 2017"
+    },
+    {
+        "listID":103, "userID": 10, "listName":"homework",
+        "dateCreated": "Apr 01 2017",
+        "dateUpdated": "Apr 01 2017"
+    }
+]
