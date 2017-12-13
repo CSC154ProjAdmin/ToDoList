@@ -1,17 +1,17 @@
 [
-        {
-            "userID": 10, "userName":"bob", "email":"bob@email", "password":"pw_bob",
-            "dateCreated": "Jan 01 2017",
-            "dateUpdated": "Jan 01 2017"
-        },
-        {
-            "userID": 20, "userName":"jim", "email":"jim@email", "password":"pw_jim",
-            "dateCreated": "Feb 01 2017",
-            "dateUpdated": "Feb 01 2017"
-        },
-        {
-            "userID": 30, "userName":"joe", "email":"joe@email", "password":"pw_joe",
-            "dateCreated": "Mar 01 2017",
-            "dateUpdated": "Mar 01 2017"
-        }
+    {
+        "userID": 10, "userName":"bob", "email":"bob@email", "password":"pw_bob",
+        "dateCreated": "Jan 01 2017",
+        "dateUpdated": "Jan 01 2017"
+    },
+    {
+        "userID": 20, "userName":"jim", "email":"jim@email", "password":"pw_jim",
+        "dateCreated": "Feb 01 2017",
+        "dateUpdated": "Feb 01 2017"
+    },
+    {
+        "userID": 30, "userName":"joe", "email":"joe@email", "password":"pw_joe",
+        "dateCreated": "Mar 01 2017",
+        "dateUpdated": "Mar 01 2017"
+    }
 ]
