@@ -262,6 +262,11 @@ angular.module("controller", [])
         }
     ];
 
+    var restoreDates = function(userWithStringDates){
+        userWithStringDates.dateCreated = new Date(userWithStringDates.dateCreated);
+        userWithStringDates.dateUpdated = new Date(userWithStringDates.dateUpdated);
+    }
+
     var getNewID = function(){
         var maxID = function(){
             var max = -1;
