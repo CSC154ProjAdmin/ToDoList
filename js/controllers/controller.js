@@ -11,17 +11,8 @@ angular.module("controller", [])
     // Always create an object first and add properties/methods to it instead of $scope
     $scope.vm = {};
 
-    $scope.vm.lists = ListsService.Lists;
+    //$scope.vm.lists = ListsService.Lists;
     $scope.vm.tasks = TasksService.Tasks;
-
-    if (!$routeParams || !$routeParams.listID) {
-        $location.path('/list/'+ $scope.vm.lists[0].listID);
-    } else {
-        $scope.vm.currentList = ListsService.findById(parseInt($routeParams.listID));
-        if (!$scope.vm.currentList) {
-            $location.path('/');
-        }
-    }
 
     var countAndFilterTasks = function(){
         //console.log("Counting and filtering tasks.");
@@ -39,7 +30,37 @@ angular.module("controller", [])
                 }
             }
         }
-    }();
+    };
+
+    var init = function(){
+        $scope.vm.lists = ListsService.Lists;
+        if (!$routeParams || !$routeParams.listID) {
+            //console.log("Redirecting to first list in array");
+            $location.path('/list/'+ $scope.vm.lists[0].listID);
+        } else {
+            $scope.vm.currentList = ListsService.findById(parseInt($routeParams.listID));
+            if (!$scope.vm.currentList) {
+                //console.log("Could not find listID. Sending home");
+                $location.path('/');
+            } else {
+                //console.log("ListID found: " + $scope.vm.currentList.listID);
+                countAndFilterTasks();
+            }
+        }
+    }
+
+    if (!ListsService.Lists) {
+        ListsService.readLists()
+        .then(function success(){
+            //console.log("Succeeded in reading lists from server");
+            init();
+        }, function error(){
+        //console.log("Failure");
+        });
+    } else {
+        //console.log("Lists already in memory");
+        init();
+    }
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
@@ -88,7 +109,12 @@ angular.module("controller", [])
         if ($scope.vm.lists.length > 1) {
             confirm2Btn("Delete List", "Are you sure you want to delete \"" +
                 list.listName.toUpperCase() + "\"?", "No", "Yes",
-                function(){ListsService.deleteList(list);});
+                function(){
+                    ListsService.deleteList(list)
+                    .then(function success(){
+                        $location.path('/');
+                    });
+                });
         }
     }
 
@@ -108,7 +134,7 @@ angular.module("controller", [])
                             '<a href="#" class="btn btn-default" data-dismiss="modal">' + 
                                 cancelButtonTxt + 
                             '</a>' +
-                            '<a href="#" id="okButton" class="btn btn-primary">' + 
+                            '<button id="okButton" class="btn btn-primary">' + 
                                 okButtonTxt + 
                             '</a>' +
                         '</div>' +
@@ -183,8 +209,10 @@ angular.module("controller", [])
         }
  
         $scope.save = function(){
-            ListsService.save($scope.vm.list);
-            $location.path("/list/" + $scope.vm.list.listID);
+            ListsService.save($scope.vm.list)
+            .then(function success(){
+                $location.path("/list/" + $scope.vm.list.listID);
+            });
         }
 }])
 .controller("LoginController", ["$scope", "$routeParams", "$location", "UsersService",
@@ -330,7 +358,7 @@ angular.module("controller", [])
 
     return usersService;
 }])
-.service("ListsService", function(){
+.service("ListsService", ["$http", function($http){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
     var urlReadList = urlRoot + "data/list_data.json";
@@ -357,10 +385,26 @@ angular.module("controller", [])
         var wasFound = (idx != -1);
         if (wasFound) {
             //console.log("Deleting listID: " + list.listID);
+            /* Client-side list deletion
             listsService.Lists.splice(idx, 1);
+            // */
+
+            //* Server-side list deletion
+            return $http.post(urlDeleteList, list)
+            .then(function success(response){
+                if (response.data.status === 1) {
+                    //console.log("Delete successful for listID: " + list.listID);
+                    listsService.Lists.splice(idx, 1);
+                } else {
+                    //console.log("Delete failed");
+                }
+            }, function error(response){
+                alert(response.status);
+            });
+            // */
         }
     }
-
+/*
     listsService.Lists = [
         {
             listID:100, userID: 10, listName:"dummy tasks", 
@@ -383,6 +427,19 @@ angular.module("controller", [])
             dateUpdated: new Date("Apr 01 2017")
         }
     ];
+*/
+    listsService.readLists = function(){
+        return $http.get(urlReadList)
+        .then(function success(response){
+            //console.log("Lists read from server");
+            listsService.Lists = response.data;
+            for (var idx in listsService.Lists) {
+                restoreDates(listsService.Lists[idx]);
+            }
+        }, function error(response){
+            alert(response.status);
+        });
+    };
 
     listsService.findById = function(id) {
         for (var idx in listsService.Lists) {
@@ -427,18 +484,57 @@ angular.module("controller", [])
     listsService.save = function(list){
         if (list.listID == null) {
             //console.log("Saving new list.");
+            /* Client-side list creation
             list.listID = getNewID();
             listsService.Lists.push(list);
+            // */
+            //* Server-side list creation
+            return $http.post(urlCreateList, list)
+            .then(function success(response){
+                if (response.data.newId) {
+                    //console.log("Successful list creation");
+                    list.listID = response.data.newId;
+                    listsService.Lists.push(list);                    
+                } else {
+                    //console.log("Failed to create new list");
+                }
+            }, function error(response){
+                //console.log("Server Failure");
+                alert(response.status);
+            });
+            // */
         } else {
             var listToEdit = listsService.findById(list.listID);
+            /* Client-side list update
             if (listToEdit) {
                 listToEdit.listName = list.listName;
             }
+            // */
+            //* Server-side list update
+            if (listToEdit) {
+                return $http.post(urlUpdateList, list)
+                .then(function success(response){
+                    if (response.data.status === 1) {
+                        //console.log("Successful list update");
+                        var idx = listsService.Lists.indexOf(listToEdit);
+                        var wasFound = (idx != -1);
+                        if (wasFound) {
+                            listsService.Lists.splice(idx, 1, list);
+                        }
+                    } else {
+                        //console.log("Failed to update list");
+                    }
+                }, function error(response){
+                    //console.log("Server Failure");
+                    alert(response.status);
+                });
+            }
+            // */
         }
     }
 
     return listsService;
-})
+}])
 .service("TasksService", function(){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
