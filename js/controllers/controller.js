@@ -14,34 +14,6 @@ angular.module("controller", [])
     //$scope.vm.lists = ListsService.Lists;
     $scope.vm.tasks = TasksService.Tasks;
 
-    ListsService.readLists()
-    .then(function success(){
-        //console.log("Succeeded in reading lists from server");
-        $scope.vm.lists = ListsService.Lists;
-        if (!$routeParams || !$routeParams.listID) {
-            $location.path('/list/'+ $scope.vm.lists[0].listID);
-        } else {
-            $scope.vm.currentList = ListsService.findById(parseInt($routeParams.listID));
-            if (!$scope.vm.currentList) {
-                $location.path('/');
-            } else {
-                countAndFilterTasks();
-            }
-        }        
-    }, function error(){
-        //console.log("Failure");
-    });
-
-/*
-    if (!$routeParams || !$routeParams.listID) {
-        $location.path('/list/'+ $scope.vm.lists[0].listID);
-    } else {
-        $scope.vm.currentList = ListsService.findById(parseInt($routeParams.listID));
-        if (!$scope.vm.currentList) {
-            $location.path('/');
-        }
-    }
-*/
     var countAndFilterTasks = function(){
         //console.log("Counting and filtering tasks.");
         if ($scope.vm.currentList) {
@@ -59,6 +31,32 @@ angular.module("controller", [])
             }
         }
     };
+
+    var init = function(){
+        $scope.vm.lists = ListsService.Lists;
+        if (!$routeParams || !$routeParams.listID) {
+            $location.path('/list/'+ $scope.vm.lists[0].listID);
+        } else {
+            $scope.vm.currentList = ListsService.findById(parseInt($routeParams.listID));
+            if (!$scope.vm.currentList) {
+                $location.path('/');
+            } else {
+                countAndFilterTasks();
+            }
+        }
+    }
+
+    if (!ListsService.Lists) {
+        ListsService.readLists()
+        .then(function success(){
+            //console.log("Succeeded in reading lists from server");
+            init();
+        }, function error(){
+        //console.log("Failure");
+        });
+    } else {
+        init();
+    }
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
@@ -376,7 +374,23 @@ angular.module("controller", [])
         var wasFound = (idx != -1);
         if (wasFound) {
             //console.log("Deleting listID: " + list.listID);
+            /* Client-side list deletion
             listsService.Lists.splice(idx, 1);
+            // */
+
+            //* Server-side list deletion
+            $http.post(urlDeleteList, list)
+            .then(function success(response){
+                if (response.data.status === 1) {
+                    //console.log("Delete successful");
+                    listsService.Lists.splice(idx, 1);
+                } else {
+                    //console.log("Delete failed");
+                }
+            }, function error(response, status){
+                alert("Server failure");
+            });
+            // */
         }
     }
 /*
