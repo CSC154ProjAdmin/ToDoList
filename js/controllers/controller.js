@@ -398,8 +398,8 @@ angular.module("controller", [])
                 } else {
                     //console.log("Delete failed");
                 }
-            }, function error(response, status){
-                alert("Server failure");
+            }, function error(response){
+                alert(response.status);
             });
             // */
         }
@@ -496,10 +496,11 @@ angular.module("controller", [])
                     list.listID = response.data.newId;
                     listsService.Lists.push(list);                    
                 } else {
-                    alert("FAILED");
+                    //console.log("Failed to create new list");
                 }
-            }, function error(response, status){
-                alert(status);
+            }, function error(response){
+                //console.log("Server Failure");
+                alert(response.status);
             });
             // */
         } else {
@@ -514,16 +515,18 @@ angular.module("controller", [])
                 return $http.post(urlUpdateList, list)
                 .then(function success(response){
                     if (response.data.status === 1) {
+                        //console.log("Successful list update");
                         var idx = listsService.Lists.indexOf(listToEdit);
                         var wasFound = (idx != -1);
                         if (wasFound) {
                             listsService.Lists.splice(idx, 1, list);
                         }
                     } else {
-                        alert("Update failed.");
+                        //console.log("Failed to update list");
                     }
-                }, function error(response, status){
-                    alert("Server failure");
+                }, function error(response){
+                    //console.log("Server Failure");
+                    alert(response.status);
                 });
             }
             // */
