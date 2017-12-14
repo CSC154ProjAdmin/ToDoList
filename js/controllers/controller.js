@@ -502,9 +502,29 @@ angular.module("controller", [])
             // */
         } else {
             var listToEdit = listsService.findById(list.listID);
+            /* Client-side list update
             if (listToEdit) {
                 listToEdit.listName = list.listName;
             }
+            // */
+            //* Server-side list update
+            if (listToEdit) {
+                return $http.post(urlUpdateList, list)
+                .then(function success(response){
+                    if (response.data.status === 1) {
+                        var idx = listsService.Lists.indexOf(listToEdit);
+                        var wasFound = (idx != -1);
+                        if (wasFound) {
+                            listsService.Lists.splice(idx, 1, list);
+                        }
+                    } else {
+                        alert("Update failed.");
+                    }
+                }, function error(response, status){
+                    alert("Server failure");
+                });
+            }
+            // */
         }
     }
 
