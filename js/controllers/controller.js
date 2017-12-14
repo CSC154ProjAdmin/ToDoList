@@ -111,7 +111,7 @@ angular.module("controller", [])
                 list.listName.toUpperCase() + "\"?", "No", "Yes",
                 function(){
                     ListsService.deleteList(list)
-                    .then(function(success){
+                    .then(function success(){
                         $location.path('/');
                     });
                 });
@@ -209,8 +209,10 @@ angular.module("controller", [])
         }
  
         $scope.save = function(){
-            ListsService.save($scope.vm.list);
-            $location.path("/list/" + $scope.vm.list.listID);
+            ListsService.save($scope.vm.list)
+            .then(function success(){
+                $location.path("/list/" + $scope.vm.list.listID);
+            });
         }
 }])
 .controller("LoginController", ["$scope", "$routeParams", "$location", "UsersService",
