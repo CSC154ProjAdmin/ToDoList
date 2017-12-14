@@ -482,8 +482,24 @@ angular.module("controller", [])
     listsService.save = function(list){
         if (list.listID == null) {
             //console.log("Saving new list.");
+            /* Client-side list creation
             list.listID = getNewID();
             listsService.Lists.push(list);
+            // */
+            //* Server-side list creation
+            return $http.post(urlCreateList, list)
+            .then(function success(response){
+                if (response.data.newId) {
+                    //console.log("Successful list creation");
+                    list.listID = response.data.newId;
+                    listsService.Lists.push(list);                    
+                } else {
+                    alert("FAILED");
+                }
+            }, function error(response, status){
+                alert(status);
+            });
+            // */
         } else {
             var listToEdit = listsService.findById(list.listID);
             if (listToEdit) {
