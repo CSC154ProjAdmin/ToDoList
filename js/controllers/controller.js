@@ -35,12 +35,15 @@ angular.module("controller", [])
     var init = function(){
         $scope.vm.lists = ListsService.Lists;
         if (!$routeParams || !$routeParams.listID) {
+            //console.log("Redirecting to first list in array");
             $location.path('/list/'+ $scope.vm.lists[0].listID);
         } else {
             $scope.vm.currentList = ListsService.findById(parseInt($routeParams.listID));
             if (!$scope.vm.currentList) {
+                //console.log("Could not find listID. Sending home");
                 $location.path('/');
             } else {
+                //console.log("ListID found: " + $scope.vm.currentList.listID);
                 countAndFilterTasks();
             }
         }
@@ -55,6 +58,7 @@ angular.module("controller", [])
         //console.log("Failure");
         });
     } else {
+        //console.log("Lists already in memory");
         init();
     }
 
@@ -105,7 +109,12 @@ angular.module("controller", [])
         if ($scope.vm.lists.length > 1) {
             confirm2Btn("Delete List", "Are you sure you want to delete \"" +
                 list.listName.toUpperCase() + "\"?", "No", "Yes",
-                function(){ListsService.deleteList(list);});
+                function(){
+                    ListsService.deleteList(list)
+                    .then(function(success){
+                        $location.path('/');
+                    });
+                });
         }
     }
 
@@ -125,7 +134,7 @@ angular.module("controller", [])
                             '<a href="#" class="btn btn-default" data-dismiss="modal">' + 
                                 cancelButtonTxt + 
                             '</a>' +
-                            '<a href="#" id="okButton" class="btn btn-primary">' + 
+                            '<button id="okButton" class="btn btn-primary">' + 
                                 okButtonTxt + 
                             '</a>' +
                         '</div>' +
@@ -379,10 +388,10 @@ angular.module("controller", [])
             // */
 
             //* Server-side list deletion
-            $http.post(urlDeleteList, list)
+            return $http.post(urlDeleteList, list)
             .then(function success(response){
                 if (response.data.status === 1) {
-                    //console.log("Delete successful");
+                    //console.log("Delete successful for listID: " + list.listID);
                     listsService.Lists.splice(idx, 1);
                 } else {
                     //console.log("Delete failed");
