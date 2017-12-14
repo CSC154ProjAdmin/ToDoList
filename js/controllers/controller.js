@@ -11,9 +11,28 @@ angular.module("controller", [])
     // Always create an object first and add properties/methods to it instead of $scope
     $scope.vm = {};
 
-    $scope.vm.lists = ListsService.Lists;
+    //$scope.vm.lists = ListsService.Lists;
     $scope.vm.tasks = TasksService.Tasks;
 
+    ListsService.readLists()
+    .then(function success(){
+        //console.log("Succeeded in reading lists from server");
+        $scope.vm.lists = ListsService.Lists;
+        if (!$routeParams || !$routeParams.listID) {
+            $location.path('/list/'+ $scope.vm.lists[0].listID);
+        } else {
+            $scope.vm.currentList = ListsService.findById(parseInt($routeParams.listID));
+            if (!$scope.vm.currentList) {
+                $location.path('/');
+            } else {
+                countAndFilterTasks();
+            }
+        }        
+    }, function error(){
+        //console.log("Failure");
+    });
+
+/*
     if (!$routeParams || !$routeParams.listID) {
         $location.path('/list/'+ $scope.vm.lists[0].listID);
     } else {
@@ -22,7 +41,7 @@ angular.module("controller", [])
             $location.path('/');
         }
     }
-
+*/
     var countAndFilterTasks = function(){
         //console.log("Counting and filtering tasks.");
         if ($scope.vm.currentList) {
@@ -39,7 +58,7 @@ angular.module("controller", [])
                 }
             }
         }
-    }();
+    };
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
@@ -360,7 +379,7 @@ angular.module("controller", [])
             listsService.Lists.splice(idx, 1);
         }
     }
-
+/*
     listsService.Lists = [
         {
             listID:100, userID: 10, listName:"dummy tasks", 
@@ -383,7 +402,7 @@ angular.module("controller", [])
             dateUpdated: new Date("Apr 01 2017")
         }
     ];
-
+*/
     listsService.readLists = function(){
         return $http.get(urlReadList)
         .then(function success(response){
