@@ -633,8 +633,24 @@ angular.module("controller", [])
         var idx = tasksService.Tasks.indexOf(task);
         var wasFound = (idx != -1);
         if (wasFound) {
-            //console.log("Deleting taskID: " + task.taskID);
+            console.log("Deleting taskID: " + task.taskID);
+            /* Client-side task deletion
             tasksService.Tasks.splice(idx, 1);
+            // */
+
+            //* Server-side task deletion
+            return $http.post(urlDeleteTask, task)
+            .then(function success(response){
+                if (response.data.status === 1) {
+                    console.log("Delete successful for taskID: " + task.taskID);
+                    tasksService.Tasks.splice(idx, 1);
+                } else {
+                    console.log("Failed to delete task");
+                }
+            }, function error(response){
+                alert(response.status);
+            });
+            // */
         }
     }
 
