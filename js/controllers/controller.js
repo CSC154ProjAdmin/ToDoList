@@ -49,18 +49,18 @@ angular.module("controller", [])
         }
     }
 
-    if (!ListsService.Lists) {
-        ListsService.readLists()
-        .then(function success(){
-            //console.log("Succeeded in reading lists from server");
-            init();
-        }, function error(){
-        //console.log("Failure");
-        });
-    } else {
+    // if (!ListsService.Lists) {
+    //     ListsService.readLists()
+    //     .then(function success(){
+    //         //console.log("Succeeded in reading lists from server");
+    //         init();
+    //     }, function error(){
+    //     //console.log("Failure");
+    //     });
+    // } else {
         //console.log("Lists already in memory");
         init();
-    }
+    // }
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
@@ -404,10 +404,10 @@ angular.module("controller", [])
             // */
         }
     }
-/*
+//*
     listsService.Lists = [
         {
-            listID:100, userID: 10, listName:"dummy tasks", 
+            listID:100, userID: 10, listName:"dummy tasks TEST", 
             dateCreated: new Date("Jan 01 2017"),
             dateUpdated: new Date("Jan 01 2017")
         },
@@ -427,7 +427,7 @@ angular.module("controller", [])
             dateUpdated: new Date("Apr 01 2017")
         }
     ];
-*/
+// */
     listsService.readLists = function(){
         return $http.get(urlReadList)
         .then(function success(response){
