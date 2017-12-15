@@ -190,8 +190,10 @@ angular.module("controller", [])
 
         $scope.save = function(){
             $scope.vm.task.dateDue = combineDateAndTime($scope.vm.day, $scope.vm.time);
-            TasksService.save($scope.vm.task);
-            $location.path("/list/"+$scope.vm.task.listID);
+            TasksService.save($scope.vm.task)
+            .then(function success(){
+                $location.path("/list/"+$scope.vm.task.listID);
+            });
         }
 
         var combineDateAndTime = function(date, time) {
