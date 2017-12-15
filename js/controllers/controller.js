@@ -6,13 +6,13 @@
 angular.module("controller", [])
 
 // Create a (MVC) controller passing its name and array of dependencies starting with $scope
-.controller("controller", ["$scope", "$routeParams", "$location", "UsersService", "ListsService", "TasksService",
-    function($scope, $routeParams, $location, UsersService, ListsService, TasksService) {
+.controller("controller", ["$scope", "$routeParams", "$location", "$q", "UsersService", "ListsService", "TasksService",
+    function($scope, $routeParams, $location, $q, UsersService, ListsService, TasksService) {
     // Always create an object first and add properties/methods to it instead of $scope
     $scope.vm = {};
 
     //$scope.vm.lists = ListsService.Lists;
-    $scope.vm.tasks = TasksService.Tasks;
+    //$scope.vm.tasks = TasksService.Tasks;
 
     var countAndFilterTasks = function(){
         //console.log("Counting and filtering tasks.");
@@ -33,6 +33,7 @@ angular.module("controller", [])
     };
 
     var init = function(){
+        $scope.vm.tasks = TasksService.Tasks;
         $scope.vm.lists = ListsService.Lists;
         if (!$routeParams || !$routeParams.listID) {
             //console.log("Redirecting to first list in array");
@@ -49,32 +50,54 @@ angular.module("controller", [])
         }
     }
 
+    // if (!ListsService.Lists) {
+    //     ListsService.readLists()
+    //     .then(function success(){
+    //         //console.log("Succeeded in reading lists from server");
+    //         init();
+    //     }, function error(){
+    //     //console.log("Failure");
+    //     });
+    // } else {
+    //     console.log("Lists already in memory");
+    //     init();
+    // }
+    // if (!TasksService.Tasks) {
+    //     TasksService.readTasks()
+    //     .then(function success(){
+    //         console.log("Succeeded in reading tasks from server");
+    //         init();
+    //     }, function error(){
+    //     console.log("Failure");
+    //     });
+    // } else {
+    //     console.log("Tasks already in memory");
+    //     init();
+    // }
+    var promises = [];
     if (!ListsService.Lists) {
-        ListsService.readLists()
-        .then(function success(){
-            //console.log("Succeeded in reading lists from server");
-            init();
-        }, function error(){
-        //console.log("Failure");
-        });
-    } else {
-        //console.log("Lists already in memory");
-        init();
+        promises.push(ListsService.readLists());
     }
+    if (!TasksService.Tasks) {
+        promises.push(TasksService.readTasks());
+    }
+    $q.all(promises).then(function success(){ init(); });
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
     }
     
     $scope.deleteTask = function(task){
-        TasksService.deleteTask(task);
-        //console.log("Removing deleted task from current tasklist and updating count.");
-        var idx = $scope.vm.currentTasks.indexOf(task);
-        var wasFound = (idx != -1);
-        if (wasFound) {
-            $scope.vm.currentTasks.splice(idx, 1);
-            $scope.vm.taskCounts[task.listID]--;
-        }
+        TasksService.deleteTask(task)
+        .then(function success(){
+            //console.log("Removing deleted task from current tasklist and updating count.");
+            var idx = $scope.vm.currentTasks.indexOf(task);
+            var wasFound = (idx != -1);
+            if (wasFound) {
+                $scope.vm.currentTasks.splice(idx, 1);
+                $scope.vm.taskCounts[task.listID]--;
+            }
+        });
     }
 
     $scope.prettyDatetime = function(ugly, useSeconds){
@@ -177,8 +200,10 @@ angular.module("controller", [])
 
         $scope.save = function(){
             $scope.vm.task.dateDue = combineDateAndTime($scope.vm.day, $scope.vm.time);
-            TasksService.save($scope.vm.task);
-            $location.path("/list/"+$scope.vm.task.listID);
+            TasksService.save($scope.vm.task)
+            .then(function success(){
+                $location.path("/list/"+$scope.vm.task.listID);
+            });
         }
 
         var combineDateAndTime = function(date, time) {
@@ -346,9 +371,10 @@ angular.module("controller", [])
                     user.userID = response.data.newId;
                     usersService.Users.push(user);
                 }
-            }, function error(response, status){
+            }, function error(response){
                 // TODO: Handle failure to create user
                 //console.log("Failure - user not added on server");
+                alert(response.status);
             });
             // */
         } else {
@@ -427,7 +453,7 @@ angular.module("controller", [])
             dateUpdated: new Date("Apr 01 2017")
         }
     ];
-*/
+// */
     listsService.readLists = function(){
         return $http.get(urlReadList)
         .then(function success(response){
@@ -535,7 +561,7 @@ angular.module("controller", [])
 
     return listsService;
 }])
-.service("TasksService", function(){
+.service("TasksService", ["$http", function($http){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
     var urlReadTask = urlRoot + "data/task_data.json";
@@ -557,7 +583,7 @@ angular.module("controller", [])
             dateUpdated: new Date()
         };
     }
-
+/*
     tasksService.Tasks = [
         // Dummy / test data
         // Table fields: TaskID, ListID, sTaskName, bComplete, dDue, dCreated, dUpdated, dDeleted
@@ -598,10 +624,24 @@ angular.module("controller", [])
             dateUpdated: new Date("2017-11-01T18:00:00")
         }
     ];
+// */
+    tasksService.readTasks = function(){
+        return $http.get(urlReadTask)
+        .then(function success(response){
+            //console.log("Tasks read from server");
+            tasksService.Tasks = response.data;
+            for (var idx in tasksService.Tasks) {
+                restoreDates(tasksService.Tasks[idx]);
+            }
+        }, function error(response){
+            alert(response.status);
+        });
+    };
 
     tasksService.toggleComplete = function(task){
         if (task) {
             task.isComplete = !task.isComplete;
+            tasksService.save(task);
         }
     }
 
@@ -610,7 +650,23 @@ angular.module("controller", [])
         var wasFound = (idx != -1);
         if (wasFound) {
             //console.log("Deleting taskID: " + task.taskID);
+            /* Client-side task deletion
             tasksService.Tasks.splice(idx, 1);
+            // */
+
+            //* Server-side task deletion
+            return $http.post(urlDeleteTask, task)
+            .then(function success(response){
+                if (response.data.status === 1) {
+                    //console.log("Delete successful for taskID: " + task.taskID);
+                    tasksService.Tasks.splice(idx, 1);
+                } else {
+                    //console.log("Failed to delete task");
+                }
+            }, function error(response){
+                alert(response.status);
+            });
+            // */
         }
     }
 
@@ -658,15 +714,54 @@ angular.module("controller", [])
     tasksService.save = function(task){
         if (task.taskID == null) {
             //console.log("Saving new task.");
+            /* Client-side task creation
             task.taskID = getNewID();
             tasksService.Tasks.push(task);
+            // */
+            //* Server-side task creation
+            return $http.post(urlCreateTask, task)
+            .then(function success(response){
+                if (response.data.newId) {
+                    //console.log("Successful task creation");
+                    task.taskID = response.data.newId;
+                    tasksService.Tasks.push(task);
+                } else {
+                    //console.log("Failed to create task");
+                }
+            }, function error(response){
+                //console.log("Server Failure");
+                alert(response.status);
+            });
+            // */
          } else {
             var taskToEdit = tasksService.findById(task.taskID);
+            /* Client-side task update
             if (taskToEdit) {
                 taskToEdit.taskName = task.taskName;
                 taskToEdit.dateDue = task.dateDue;
             }
+            // */
+            //* Server-side task update
+            if (taskToEdit) {
+                return $http.post(urlUpdateTask, task)
+                .then(function success(response){
+                    if (response.data.status === 1) {
+                        //console.log("Successful task update");
+                        var idx = tasksService.Tasks.indexOf(taskToEdit);
+                        var wasFound = (idx != -1);
+                        if (wasFound) {
+                            tasksService.Tasks.splice(idx, 1, task);
+                        }
+                    } else {
+                        //console.log("Failed to update task");
+                    }
+                }, function error(response){
+                    //console.log("Server Failure");
+                    alert(response.status);
+                });
+            }
+            // */
         }
     }
     return tasksService;
-});
+}]);
