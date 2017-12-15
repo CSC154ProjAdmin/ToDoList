@@ -12,7 +12,7 @@ angular.module("controller", [])
     $scope.vm = {};
 
     //$scope.vm.lists = ListsService.Lists;
-    $scope.vm.tasks = TasksService.Tasks;
+    //$scope.vm.tasks = TasksService.Tasks;
 
     var countAndFilterTasks = function(){
         //console.log("Counting and filtering tasks.");
@@ -33,6 +33,7 @@ angular.module("controller", [])
     };
 
     var init = function(){
+        $scope.vm.tasks = TasksService.Tasks;
         $scope.vm.lists = ListsService.Lists;
         if (!$routeParams || !$routeParams.listID) {
             //console.log("Redirecting to first list in array");
@@ -59,8 +60,18 @@ angular.module("controller", [])
     //     });
     // } else {
         //console.log("Lists already in memory");
+    if (!TasksService.Tasks) {
+        TasksService.readTasks()
+        .then(function success(){
+            console.log("Succeeded in reading tasks from server");
+            init();
+        }, function error(){
+        console.log("Failure");
+        });
+    } else {
+        console.log("Tasks already in memory");
         init();
-    // }
+    }
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
@@ -557,7 +568,7 @@ angular.module("controller", [])
             dateUpdated: new Date()
         };
     }
-
+/*
     tasksService.Tasks = [
         // Dummy / test data
         // Table fields: TaskID, ListID, sTaskName, bComplete, dDue, dCreated, dUpdated, dDeleted
@@ -598,7 +609,7 @@ angular.module("controller", [])
             dateUpdated: new Date("2017-11-01T18:00:00")
         }
     ];
-
+// */
     tasksService.readTasks = function(){
         return $http.get(urlReadTask)
         .then(function success(response){
