@@ -407,7 +407,7 @@ angular.module("controller", [])
 //*
     listsService.Lists = [
         {
-            listID:100, userID: 10, listName:"dummy tasks TEST", 
+            listID:100, userID: 10, listName:"dummy tasks", 
             dateCreated: new Date("Jan 01 2017"),
             dateUpdated: new Date("Jan 01 2017")
         },
@@ -535,7 +535,7 @@ angular.module("controller", [])
 
     return listsService;
 }])
-.service("TasksService", function(){
+.service("TasksService", ["$http", function($http){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
     var urlReadTask = urlRoot + "data/task_data.json";
@@ -598,6 +598,19 @@ angular.module("controller", [])
             dateUpdated: new Date("2017-11-01T18:00:00")
         }
     ];
+
+    tasksService.readTasks = function(){
+        return $http.get(urlReadTask)
+        .then(function success(response){
+            //console.log("Lists read from server");
+            tasksService.Tasks = response.data;
+            for (var idx in tasksService.Tasks) {
+                restoreDates(tasksService.Tasks[idx]);
+            }
+        }, function error(response){
+            alert(response.status);
+        });
+    };
 
     tasksService.toggleComplete = function(task){
         if (task) {
@@ -669,4 +682,4 @@ angular.module("controller", [])
         }
     }
     return tasksService;
-});
+}]);
