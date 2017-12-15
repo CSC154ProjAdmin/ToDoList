@@ -699,15 +699,54 @@ angular.module("controller", [])
 
     tasksService.save = function(task){
         if (task.taskID == null) {
-            //console.log("Saving new task.");
+            console.log("Saving new task.");
+            /* Client-side task creation
             task.taskID = getNewID();
             tasksService.Tasks.push(task);
+            // */
+            //* Server-side task creation
+            return $http.post(urlCreateTask, task)
+            .then(function success(response){
+                if (response.data.newId) {
+                    console.log("Successful task creation");
+                    task.taskID = response.data.newId;
+                    tasksService.Tasks.push(task);
+                } else {
+                    console.log("Failed to create task");
+                }
+            }, function error(response){
+                console.log("Server Failure");
+                alert(response.status);
+            });
+            // */
          } else {
             var taskToEdit = tasksService.findById(task.taskID);
+            /* Client-side task update
             if (taskToEdit) {
                 taskToEdit.taskName = task.taskName;
                 taskToEdit.dateDue = task.dateDue;
             }
+            // */
+            //* Server-side task update
+            if (taskToEdit) {
+                return $http.post(urlUpdateTask, task)
+                .then(function success(response){
+                    if (response.data.status === 1) {
+                        console.log("Successful task update");
+                        var idx = tasksService.Tasks.indexOf(taskToEdit);
+                        var wasFound = (idx != -1);
+                        if (wasFound) {
+                            tasksService.Tasks.splice(idx, 1, task);
+                        }
+                    } else {
+                        console.log("Failed to update task");
+                    }
+                }, function error(response){
+                    console.log("Server Failure");
+                    alert(response.status);
+                });
+            }
+            // */
         }
     }
     return tasksService;
