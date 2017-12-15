@@ -641,6 +641,7 @@ angular.module("controller", [])
     tasksService.toggleComplete = function(task){
         if (task) {
             task.isComplete = !task.isComplete;
+            tasksService.save(task);
         }
     }
 
