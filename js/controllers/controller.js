@@ -78,14 +78,16 @@ angular.module("controller", [])
     }
     
     $scope.deleteTask = function(task){
-        TasksService.deleteTask(task);
-        //console.log("Removing deleted task from current tasklist and updating count.");
-        var idx = $scope.vm.currentTasks.indexOf(task);
-        var wasFound = (idx != -1);
-        if (wasFound) {
-            $scope.vm.currentTasks.splice(idx, 1);
-            $scope.vm.taskCounts[task.listID]--;
-        }
+        TasksService.deleteTask(task)
+        .then(function success(){
+            console.log("Removing deleted task from current tasklist and updating count.");
+            var idx = $scope.vm.currentTasks.indexOf(task);
+            var wasFound = (idx != -1);
+            if (wasFound) {
+                $scope.vm.currentTasks.splice(idx, 1);
+                $scope.vm.taskCounts[task.listID]--;
+            }
+        });
     }
 
     $scope.prettyDatetime = function(ugly, useSeconds){
