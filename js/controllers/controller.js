@@ -74,14 +74,14 @@ angular.module("controller", [])
     //     console.log("Tasks already in memory");
     //     init();
     // }
-    var promiseArray = [];
+    var promises = [];
     if (!ListsService.Lists) {
-        promiseArray.push(ListsService.readLists());
+        promises.push(ListsService.readLists());
     }
     if (!TasksService.Tasks) {
-        promiseArray.push(TasksService.readTasks());
+        promises.push(TasksService.readTasks());
     }
-    $q.all(promiseArray).then(function success(){ init(); });
+    $q.all(promises).then(function success(){ init(); });
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
