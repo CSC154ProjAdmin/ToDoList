@@ -6,8 +6,8 @@
 angular.module("controller", [])
 
 // Create a (MVC) controller passing its name and array of dependencies starting with $scope
-.controller("controller", ["$scope", "$routeParams", "$location", "UsersService", "ListsService", "TasksService",
-    function($scope, $routeParams, $location, UsersService, ListsService, TasksService) {
+.controller("controller", ["$scope", "$routeParams", "$location", "$q", "UsersService", "ListsService", "TasksService",
+    function($scope, $routeParams, $location, $q, UsersService, ListsService, TasksService) {
     // Always create an object first and add properties/methods to it instead of $scope
     $scope.vm = {};
 
@@ -15,7 +15,7 @@ angular.module("controller", [])
     //$scope.vm.tasks = TasksService.Tasks;
 
     var countAndFilterTasks = function(){
-        //console.log("Counting and filtering tasks.");
+        console.log("Counting and filtering tasks.");
         if ($scope.vm.currentList) {
             $scope.vm.currentTasks = [];
             $scope.vm.taskCounts = [];
@@ -36,15 +36,15 @@ angular.module("controller", [])
         $scope.vm.tasks = TasksService.Tasks;
         $scope.vm.lists = ListsService.Lists;
         if (!$routeParams || !$routeParams.listID) {
-            //console.log("Redirecting to first list in array");
+            console.log("Redirecting to first list in array");
             $location.path('/list/'+ $scope.vm.lists[0].listID);
         } else {
             $scope.vm.currentList = ListsService.findById(parseInt($routeParams.listID));
             if (!$scope.vm.currentList) {
-                //console.log("Could not find listID. Sending home");
+                console.log("Could not find listID. Sending home");
                 $location.path('/');
             } else {
-                //console.log("ListID found: " + $scope.vm.currentList.listID);
+                console.log("ListID found: " + $scope.vm.currentList.listID);
                 countAndFilterTasks();
             }
         }
@@ -59,19 +59,29 @@ angular.module("controller", [])
     //     //console.log("Failure");
     //     });
     // } else {
-        //console.log("Lists already in memory");
-    if (!TasksService.Tasks) {
-        TasksService.readTasks()
-        .then(function success(){
-            console.log("Succeeded in reading tasks from server");
-            init();
-        }, function error(){
-        console.log("Failure");
-        });
-    } else {
-        console.log("Tasks already in memory");
-        init();
+    //     console.log("Lists already in memory");
+    //     init();
+    // }
+    // if (!TasksService.Tasks) {
+    //     TasksService.readTasks()
+    //     .then(function success(){
+    //         console.log("Succeeded in reading tasks from server");
+    //         init();
+    //     }, function error(){
+    //     console.log("Failure");
+    //     });
+    // } else {
+    //     console.log("Tasks already in memory");
+    //     init();
+    // }
+    var promiseArray = [];
+    if (!ListsService.Lists) {
+        promiseArray.push(ListsService.readLists());
     }
+    if (!TasksService.Tasks) {
+        promiseArray.push(TasksService.readTasks());
+    }
+    $q.all(promiseArray).then(function success(){ init(); });
 
     $scope.toggleComplete = function(task){
         TasksService.toggleComplete(task);
@@ -170,20 +180,20 @@ angular.module("controller", [])
 
         if (!$routeParams.taskID){
             // TODO: Handle invalid listID. Likely just need to search task list.
-            //console.log("No taskID sent. Creating new task.");
+            console.log("No taskID sent. Creating new task.");
             $scope.vm.task = TasksService.createTask(parseInt($routeParams.listID));
             $scope.vm.day = new Date();
             $scope.vm.time = new Date("1970-01-01T12:00:00.000");
         } else {
             var taskToEdit = TasksService.findById(parseInt($routeParams.taskID));
             if (taskToEdit && taskToEdit.listID === parseInt($routeParams.listID)) {
-                //console.log("Task found: Cloning for edit");
+                console.log("Task found: Cloning for edit");
                 $scope.vm.task = TasksService.cloneTask(taskToEdit);
                 $scope.vm.day = new Date($scope.vm.task.dateDue);
                 $scope.vm.time = new Date($scope.vm.task.dateDue);
                 $scope.vm.time.setSeconds(0);
             } else {
-                //console.log("Invalid list or task ID. Redirecting home.");
+                console.log("Invalid list or task ID. Redirecting home.");
                 $location.path("/");
             }
         }
@@ -210,15 +220,15 @@ angular.module("controller", [])
         $scope.vm.prevListID = $routeParams.prevListID || $routeParams.listID || '';
         if (!$routeParams.listID){
             // TODO: Handle invalid userID.
-            //console.log("No listID sent. Creating new list.");
+            console.log("No listID sent. Creating new list.");
             $scope.vm.list = ListsService.createList(parseInt($routeParams.userID));
         } else {
             var listToEdit = ListsService.findById(parseInt($routeParams.listID));
             if (listToEdit && listToEdit.userID === parseInt($routeParams.userID)) {
-                //console.log("List found: Cloning for edit");
+                console.log("List found: Cloning for edit");
                 $scope.vm.list = ListsService.cloneList(listToEdit);
             } else {
-                //console.log("Invalid user or list ID. Redirecting home.");
+                console.log("Invalid user or list ID. Redirecting home.");
                 $location.path("/");
             }
         }
@@ -344,7 +354,7 @@ angular.module("controller", [])
 
     usersService.save = function(user){
         if (user.userID == null) {
-            //console.log("Saving new user.");
+            console.log("Saving new user.");
 
             /* Client-side user creation
             user.userID = getNewID();
@@ -355,15 +365,15 @@ angular.module("controller", [])
             // Return promise for post-creation needs
             return $http.post(urlCreateUser, user)
             .then(function success(response){
-                //console.log("Success - user added on server");
+                console.log("Success - user added on server");
                 if (response.data.newId) {
-                    //console.log("Pushing user to array");
+                    console.log("Pushing user to array");
                     user.userID = response.data.newId;
                     usersService.Users.push(user);
                 }
             }, function error(response, status){
                 // TODO: Handle failure to create user
-                //console.log("Failure - user not added on server");
+                console.log("Failure - user not added on server");
             });
             // */
         } else {
@@ -399,7 +409,7 @@ angular.module("controller", [])
         var idx = listsService.Lists.indexOf(list);
         var wasFound = (idx != -1);
         if (wasFound) {
-            //console.log("Deleting listID: " + list.listID);
+            console.log("Deleting listID: " + list.listID);
             /* Client-side list deletion
             listsService.Lists.splice(idx, 1);
             // */
@@ -408,10 +418,10 @@ angular.module("controller", [])
             return $http.post(urlDeleteList, list)
             .then(function success(response){
                 if (response.data.status === 1) {
-                    //console.log("Delete successful for listID: " + list.listID);
+                    console.log("Delete successful for listID: " + list.listID);
                     listsService.Lists.splice(idx, 1);
                 } else {
-                    //console.log("Delete failed");
+                    console.log("Delete failed");
                 }
             }, function error(response){
                 alert(response.status);
@@ -419,7 +429,7 @@ angular.module("controller", [])
             // */
         }
     }
-//*
+/*
     listsService.Lists = [
         {
             listID:100, userID: 10, listName:"dummy tasks", 
@@ -446,7 +456,7 @@ angular.module("controller", [])
     listsService.readLists = function(){
         return $http.get(urlReadList)
         .then(function success(response){
-            //console.log("Lists read from server");
+            console.log("Lists read from server");
             listsService.Lists = response.data;
             for (var idx in listsService.Lists) {
                 restoreDates(listsService.Lists[idx]);
@@ -498,7 +508,7 @@ angular.module("controller", [])
 
     listsService.save = function(list){
         if (list.listID == null) {
-            //console.log("Saving new list.");
+            console.log("Saving new list.");
             /* Client-side list creation
             list.listID = getNewID();
             listsService.Lists.push(list);
@@ -507,14 +517,14 @@ angular.module("controller", [])
             return $http.post(urlCreateList, list)
             .then(function success(response){
                 if (response.data.newId) {
-                    //console.log("Successful list creation");
+                    console.log("Successful list creation");
                     list.listID = response.data.newId;
                     listsService.Lists.push(list);                    
                 } else {
-                    //console.log("Failed to create new list");
+                    console.log("Failed to create new list");
                 }
             }, function error(response){
-                //console.log("Server Failure");
+                console.log("Server Failure");
                 alert(response.status);
             });
             // */
@@ -530,17 +540,17 @@ angular.module("controller", [])
                 return $http.post(urlUpdateList, list)
                 .then(function success(response){
                     if (response.data.status === 1) {
-                        //console.log("Successful list update");
+                        console.log("Successful list update");
                         var idx = listsService.Lists.indexOf(listToEdit);
                         var wasFound = (idx != -1);
                         if (wasFound) {
                             listsService.Lists.splice(idx, 1, list);
                         }
                     } else {
-                        //console.log("Failed to update list");
+                        console.log("Failed to update list");
                     }
                 }, function error(response){
-                    //console.log("Server Failure");
+                    console.log("Server Failure");
                     alert(response.status);
                 });
             }
@@ -617,7 +627,7 @@ angular.module("controller", [])
     tasksService.readTasks = function(){
         return $http.get(urlReadTask)
         .then(function success(response){
-            //console.log("Lists read from server");
+            console.log("Tasks read from server");
             tasksService.Tasks = response.data;
             for (var idx in tasksService.Tasks) {
                 restoreDates(tasksService.Tasks[idx]);
