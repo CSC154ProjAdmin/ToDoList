@@ -41,7 +41,7 @@ angular.module("controller", [])
         } else {
             $scope.vm.currentList = ListsService.findById(parseInt($routeParams.listID));
             if (!$scope.vm.currentList) {
-                //console.log("Could not find listID. Sending home");
+                //console.log("Could not find listID " + $routeParams.listID + ". Sending home");
                 $location.path('/');
             } else {
                 //console.log("ListID found: " + $scope.vm.currentList.listID);
@@ -388,12 +388,12 @@ angular.module("controller", [])
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
     //var urlReadList = urlRoot + "data/list_data.json";
-    var urlCreateList = urlRoot + "data/list_added.json";
+    //var urlCreateList = urlRoot + "data/list_added.json";
     var urlUpdateList = urlRoot + "data/list_updated.json";
     var urlDeleteList = urlRoot + "data/list_deleted.json";
 
     var urlReadList = urlRoot + "php/list_read.php";
-    // var urlCreateList = urlRoot + "php/list_create.php";
+    var urlCreateList = urlRoot + "php/list_create.php";
     // var urlUpdateList = urlRoot + "php/list_update.php";
     // var urlDeleteList = urlRoot + "php/list_delete.php";
 
@@ -524,10 +524,14 @@ angular.module("controller", [])
             //* Server-side list creation
             return $http.post(urlCreateList, list)
             .then(function success(response){
+                if (response.data.status == 0) {
+                 alert("Unable to add list");
+                 return;
+                }
                 if (response.data.newId) {
                     //console.log("Successful list creation");
                     list.listID = response.data.newId;
-                    listsService.Lists.push(list);                    
+                    listsService.Lists.push(list);
                 } else {
                     //console.log("Failed to create new list");
                 }
