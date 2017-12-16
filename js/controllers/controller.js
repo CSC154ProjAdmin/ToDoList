@@ -79,7 +79,7 @@ angular.module("controller", [])
         promises.push(ListsService.readLists({userID:1, userName:'paul45'}));
     }
     if (!TasksService.Tasks) {
-        promises.push(TasksService.readTasks());
+        promises.push(TasksService.readTasks({userID:1, userName:'paul45'}));
     }
     $q.all(promises).then(function success(){ init(); });
 
@@ -575,12 +575,12 @@ angular.module("controller", [])
 .service("TasksService", ["$http", function($http){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
-    var urlReadTask = urlRoot + "data/task_data.json";
+    //var urlReadTask = urlRoot + "data/task_data.json";
     //var urlCreateTask = urlRoot + "data/task_added.json";
     var urlUpdateTask = urlRoot + "data/task_updated.json";
     var urlDeleteTask = urlRoot + "data/task_deleted.json";
 
-    // var urlReadTask = urlRoot + "php/task_read.php";
+    var urlReadTask = urlRoot + "php/task_read.php";
     var urlCreateTask = urlRoot + "php/task_create.php";
     // var urlUpdateTask = urlRoot + "php/task_update.php";
     // var urlDeleteTask = urlRoot + "php/task_delete.php";
@@ -636,15 +636,22 @@ angular.module("controller", [])
         }
     ];
 // */
-    tasksService.readTasks = function(){
-        return $http.get(urlReadTask)
+    tasksService.readTasks = function(user){
+        return $http.post(urlReadTask, user)
         .then(function success(response){
             //console.log("Tasks read from server");
+            if (response.data == -1) {
+             //console.log("No tasks found for user.");
+             tasksService.Tasks = [];
+             return;
+            }
             tasksService.Tasks = response.data;
             for (var idx in tasksService.Tasks) {
                 restoreDates(tasksService.Tasks[idx]);
+                //console.log(tasksService.Tasks[idx]);
             }
         }, function error(response){
+            //console.log("Server Failure");
             alert(response.status);
         });
     };
