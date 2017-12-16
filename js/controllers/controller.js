@@ -76,7 +76,7 @@ angular.module("controller", [])
     // }
     var promises = [];
     if (!ListsService.Lists) {
-        promises.push(ListsService.readLists());
+        promises.push(ListsService.readLists({userID:1, userName:'paul45'}));
     }
     if (!TasksService.Tasks) {
         promises.push(TasksService.readTasks());
@@ -387,12 +387,12 @@ angular.module("controller", [])
 .service("ListsService", ["$http", function($http){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
-    var urlReadList = urlRoot + "data/list_data.json";
+    //var urlReadList = urlRoot + "data/list_data.json";
     var urlCreateList = urlRoot + "data/list_added.json";
     var urlUpdateList = urlRoot + "data/list_updated.json";
     var urlDeleteList = urlRoot + "data/list_deleted.json";
 
-    // var urlReadList = urlRoot + "php/list_read.php";
+    var urlReadList = urlRoot + "php/list_read.php";
     // var urlCreateList = urlRoot + "php/list_create.php";
     // var urlUpdateList = urlRoot + "php/list_update.php";
     // var urlDeleteList = urlRoot + "php/list_delete.php";
@@ -454,15 +454,22 @@ angular.module("controller", [])
         }
     ];
 // */
-    listsService.readLists = function(){
-        return $http.get(urlReadList)
+    listsService.readLists = function(user){
+        return $http.post(urlReadList, user)
         .then(function success(response){
             //console.log("Lists read from server");
+            if (response.data == -1) {
+             alert("No lists found for user.");
+             listsService.Lists = [];
+             return;
+            }
             listsService.Lists = response.data;
             for (var idx in listsService.Lists) {
                 restoreDates(listsService.Lists[idx]);
+                //console.log(listsService.Lists[idx]);
             }
         }, function error(response){
+            //console.log("Server Failure");
             alert(response.status);
         });
     };
