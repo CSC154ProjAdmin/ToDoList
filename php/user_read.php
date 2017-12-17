@@ -23,7 +23,7 @@ $userQuery = <<<SQL
 Select *
 From Users
 Where dDeleted Is Null
-And sPassword = '{$params["password"]}'
+And sPassword = BINARY '{$params["password"]}'
 And (
   sUserName = '{$params["identifier"]}'
   Or
