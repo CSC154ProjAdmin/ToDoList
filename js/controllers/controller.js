@@ -255,11 +255,23 @@ angular.module("controller", [])
         $scope.vm.loginInfo = { identifier:"", password:"" };
 
         $scope.login = function(){
+            /* Client-side user login
             if (UsersService.login($scope.vm.loginInfo)){
                 $location.path("/");
             } else {
                 $scope.vm.hasFailedLogin = true;
             }
+            // */
+            //* Server-side user login
+            UsersService.login($scope.vm.loginInfo)
+            .then(function success(){
+                if (UsersService.loggedUser) {
+                    $location.path("/");                    
+                } else {
+                    $scope.vm.hasFailedLogin = true;
+                }
+            });
+            // */
         }
 }])
 .controller("RegistrationController", ["$scope", "$routeParams", "$location", "UsersService",
