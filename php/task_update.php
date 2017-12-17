@@ -15,11 +15,12 @@ if ($body_params) {
         $params[$param_name] = $param_value;
     }
 }
+$isComplete = ($params["isComplete"] == true ? 1 : 0);
 $userQuery = <<<SQL
 Update Tasks
 Set dUpdated = sysdate(3),
 sTaskName = '{$params["taskName"]}',
-bComplete = {$params["isComplete"] == true ? 1 : 0},
+bComplete = {$isComplete},
 dDue = '{$params["dateDue"]}'
 Where dDeleted Is Null
 And TaskID = {$params["taskID"]}
