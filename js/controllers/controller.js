@@ -465,12 +465,12 @@ angular.module("controller", [])
     //var urlReadList = urlRoot + "data/list_data.json";
     //var urlCreateList = urlRoot + "data/list_added.json";
     //var urlUpdateList = urlRoot + "data/list_updated.json";
-    var urlDeleteList = urlRoot + "data/list_deleted.json";
+    //var urlDeleteList = urlRoot + "data/list_deleted.json";
 
     var urlReadList = urlRoot + "php/list_read.php";
     var urlCreateList = urlRoot + "php/list_create.php";
     var urlUpdateList = urlRoot + "php/list_update.php";
-    // var urlDeleteList = urlRoot + "php/list_delete.php";
+    var urlDeleteList = urlRoot + "php/list_delete.php";
 
     var listsService = {};
     listsService.createList = function(userID) {
@@ -500,6 +500,7 @@ angular.module("controller", [])
                     //console.log("Delete failed");
                 }
             }, function error(response){
+                //console.log("Server Failure");
                 alert(response.status);
             });
             // */
