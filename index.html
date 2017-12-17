@@ -22,6 +22,10 @@
               <li><a href="#/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
               <li><a href="#/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
             </ul>                
+            <ul class="nav navbar-nav" ng-show="isLoggedIn()">
+                <li><a href="#/dash">Dashboard</a></li>
+                <li><a href="#">My Lists</a></li>
+            </ul>
             <ul class="nav navbar-nav navbar-right" ng-show="isLoggedIn()">
               <li><a href="#">Welcome, {{vm.username}}</a></li>
               <li><a type="button" class="btn" ng-click="logout()">
