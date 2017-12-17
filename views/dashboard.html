@@ -1,4 +1,7 @@
 <div class="col-xs-12 col-sm-offset-1 col-sm-10">
+    <div class="jumbotron text-center">
+        <h2>Tasks Due This Week</h2>
+    </div>
     <ul class="list-group">
         <li class="list-group-item text-center clearfix" ng-show="vm.currentTasks.length == 0">NO TASKS DUE SOON</li>
         <li class="list-group-item text-center clearfix"
@@ -27,14 +30,13 @@
                 </span>
                 -->
                 <span style="font-weight:bold;" ng-class="{strike: task.isComplete}">
-                    {{task.dateDue | uppercase | date : "MMM d, y h:mm a" }}
+                    {{task.dateDue | date : "MMM d, y h:mm a" | uppercase }}
                 </span>
             </span>
 
-
             <!-- List Shortcut -->
             <a href="#/list/{{task.listID}}" class="btn btn-sm btn-default pull-right">
-                <span class="glyphicon glyphicon-list"></span>
+                <span class="glyphicon glyphicon-list"></span> List
             </a>
         </li>
     </ul>
