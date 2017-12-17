@@ -321,9 +321,16 @@ function($scope, $location, UsersService, ListsService, TasksService){
         $scope.vm.newUser = UsersService.createUser();
 
         $scope.save = function(){
-            UsersService.save($scope.vm.newUser);
-            // TODO: Create new list for new user.  ALL USERS MUST HAVE AT LEAST ONE LIST
-            $location.path("/");
+            UsersService.save($scope.vm.newUser)
+            .then(function success(){
+                if (UsersService.loggedUser) {
+                    // TODO: Create new list for new user.  ALL USERS MUST HAVE AT LEAST ONE LIST
+                    // TODO: Set TasksService.Tasks to empty array. New user has no tasks
+                    $location.path("/");                    
+                } else {
+                    alert("Failed to create user");
+                }
+            });
         }
 }])
 .service("UsersService", ["$http", function($http){
