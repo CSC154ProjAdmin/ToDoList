@@ -322,6 +322,7 @@ function($scope, $location, UsersService, ListsService, TasksService){
 
         $scope.save = function(){
             UsersService.save($scope.vm.newUser);
+            // TODO: Create new list for new user.  ALL USERS MUST HAVE AT LEAST ONE LIST
             $location.path("/");
         }
 }])
@@ -329,12 +330,12 @@ function($scope, $location, UsersService, ListsService, TasksService){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
     //var urlReadUser = urlRoot + "data/user_data.json";
-    var urlCreateUser = urlRoot + "data/user_added.json";
+    //var urlCreateUser = urlRoot + "data/user_added.json";
     var urlUpdateUser = urlRoot + "data/user_updated.json";
     var urlDeleteUser = urlRoot + "data/user_deleted.json";
 
     var urlReadUser = urlRoot + "php/user_read.php";
-    // var urlCreateUser = urlRoot + "php/user_create.php";
+    var urlCreateUser = urlRoot + "php/user_create.php";
     // var urlUpdateUser = urlRoot + "php/user_update.php";
     // var urlDeleteUser = urlRoot + "php/user_delete.php";
 
@@ -445,9 +446,15 @@ function($scope, $location, UsersService, ListsService, TasksService){
             .then(function success(response){
                 //console.log("Success - user added on server");
                 if (response.data.newId) {
+                    /* Client-side user creation
                     //console.log("Pushing user to array");
                     user.userID = response.data.newId;
                     usersService.Users.push(user);
+                    // */
+                    //* Server-side user creation
+                    user.userID = response.data.newId;
+                    usersService.loggedUser = user;
+                    // */
                 }
             }, function error(response){
                 // TODO: Handle failure to create user
