@@ -363,7 +363,7 @@ angular.module("controller", [])
         userWithStringDates.dateCreated = new Date(userWithStringDates.dateCreated);
         userWithStringDates.dateUpdated = new Date(userWithStringDates.dateUpdated);
     }
-
+/*
     var readUsers = function(){
         $http.get(urlReadUser)
         .then(function success(response){
@@ -375,7 +375,7 @@ angular.module("controller", [])
             alert(response.status);
         });
     }();
-
+*/
     var getNewID = function(){
         var maxID = function(){
             var max = -1;
