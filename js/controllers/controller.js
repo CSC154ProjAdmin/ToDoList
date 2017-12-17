@@ -315,26 +315,43 @@ function($scope, $location, UsersService, ListsService, TasksService){
             // */
         }
 }])
-.controller("RegistrationController", ["$scope", "$routeParams", "$location", "UsersService",
-    function($scope, $routeParams, $location, UsersService){
+.controller("RegistrationController", ["$scope", "$routeParams", "$location", "UsersService", "ListsService", "TasksService",
+    function($scope, $routeParams, $location, UsersService, ListsService, TasksService){
         $scope.vm = {};
         $scope.vm.newUser = UsersService.createUser();
 
         $scope.save = function(){
-            UsersService.save($scope.vm.newUser);
-            $location.path("/");
+            UsersService.save($scope.vm.newUser)
+            .then(function success(){
+                if (UsersService.loggedUser) {
+                    // TODO: Create new list and task for new user.  ALL USERS MUST HAVE AT LEAST ONE LIST
+                    var newList = ListsService.createList(UsersService.loggedUser.userID);
+                    newList.listName = "My First List";
+                    ListsService.save(newList)
+                    .then(function success(){
+                        var newTask = TasksService.createTask(newList.listID);
+                        newTask.taskName = "My First Task";
+                        TasksService.save(newTask)
+                        .then(function success(){
+                            $location.path("/");                            
+                        });
+                    });
+                } else {
+                    alert("Could not create user. Perhaps try a different username or email address.");
+                }
+            });
         }
 }])
 .service("UsersService", ["$http", function($http){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
     //var urlReadUser = urlRoot + "data/user_data.json";
-    var urlCreateUser = urlRoot + "data/user_added.json";
+    //var urlCreateUser = urlRoot + "data/user_added.json";
     var urlUpdateUser = urlRoot + "data/user_updated.json";
     var urlDeleteUser = urlRoot + "data/user_deleted.json";
 
     var urlReadUser = urlRoot + "php/user_read.php";
-    // var urlCreateUser = urlRoot + "php/user_create.php";
+    var urlCreateUser = urlRoot + "php/user_create.php";
     // var urlUpdateUser = urlRoot + "php/user_update.php";
     // var urlDeleteUser = urlRoot + "php/user_delete.php";
 
@@ -445,9 +462,15 @@ function($scope, $location, UsersService, ListsService, TasksService){
             .then(function success(response){
                 //console.log("Success - user added on server");
                 if (response.data.newId) {
+                    /* Client-side user creation
                     //console.log("Pushing user to array");
                     user.userID = response.data.newId;
                     usersService.Users.push(user);
+                    // */
+                    //* Server-side user creation
+                    user.userID = response.data.newId;
+                    usersService.loggedUser = user;
+                    // */
                 }
             }, function error(response){
                 // TODO: Handle failure to create user
@@ -610,6 +633,9 @@ function($scope, $location, UsersService, ListsService, TasksService){
                 if (response.data.newId) {
                     //console.log("Successful list creation");
                     list.listID = response.data.newId;
+                    if (!listsService.Lists) {
+                        listsService.Lists = [];
+                    }
                     listsService.Lists.push(list);
                 } else {
                     //console.log("Failed to create new list");
@@ -826,6 +852,9 @@ function($scope, $location, UsersService, ListsService, TasksService){
                 if (response.data.newId) {
                     //console.log("Successful task creation");
                     task.taskID = response.data.newId;
+                    if (!tasksService.Tasks) {
+                        tasksService.Tasks = [];
+                    }
                     tasksService.Tasks.push(task);
                 } else {
                     //console.log("Failed to create task");
