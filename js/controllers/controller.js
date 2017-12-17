@@ -11,6 +11,13 @@ angular.module("controller", [])
     // Always create an object first and add properties/methods to it instead of $scope
     $scope.vm = {};
 
+    if (!UsersService.loggedUser) {
+        $location.path('/login');
+        return;
+    } else {
+        $scope.vm.loggedUser = UsersService.loggedUser;
+    }
+
     //$scope.vm.lists = ListsService.Lists;
     //$scope.vm.tasks = TasksService.Tasks;
 
