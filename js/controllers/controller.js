@@ -633,6 +633,9 @@ function($scope, $location, UsersService, ListsService, TasksService){
                 if (response.data.newId) {
                     //console.log("Successful list creation");
                     list.listID = response.data.newId;
+                    if (!listsService.Lists) {
+                        listsService.Lists = [];
+                    }
                     listsService.Lists.push(list);
                 } else {
                     //console.log("Failed to create new list");
@@ -849,6 +852,9 @@ function($scope, $location, UsersService, ListsService, TasksService){
                 if (response.data.newId) {
                     //console.log("Successful task creation");
                     task.taskID = response.data.newId;
+                    if (!tasksService.Tasks) {
+                        tasksService.Tasks = [];
+                    }
                     tasksService.Tasks.push(task);
                 } else {
                     //console.log("Failed to create task");
