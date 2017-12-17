@@ -11,6 +11,13 @@ angular.module("controller", [])
     // Always create an object first and add properties/methods to it instead of $scope
     $scope.vm = {};
 
+    if (!UsersService.loggedUser) {
+        $location.path('/login');
+        return;
+    } else {
+        $scope.vm.loggedUser = UsersService.loggedUser;
+    }
+
     //$scope.vm.lists = ListsService.Lists;
     //$scope.vm.tasks = TasksService.Tasks;
 
@@ -76,10 +83,10 @@ angular.module("controller", [])
     // }
     var promises = [];
     if (!ListsService.Lists) {
-        promises.push(ListsService.readLists({userID:1, userName:'paul45'}));
+        promises.push(ListsService.readLists($scope.vm.loggedUser));
     }
     if (!TasksService.Tasks) {
-        promises.push(TasksService.readTasks({userID:1, userName:'paul45'}));
+        promises.push(TasksService.readTasks($scope.vm.loggedUser));
     }
     $q.all(promises).then(function success(){ init(); });
 
@@ -240,17 +247,46 @@ angular.module("controller", [])
             });
         }
 }])
+.controller("navController", ["$scope", "$location", "UsersService", function($scope, $location, UsersService){
+    $scope.vm = {};
+    $scope.isLoggedIn = function(){
+        if (UsersService.loggedUser != null){
+            $scope.vm.username = UsersService.loggedUser.userName;
+            return true;
+        }
+        return false;
+    }
+
+    $scope.logout = function(){
+        //console.log("Logging out userID: " + UsersService.loggedUser.userID);
+        UsersService.loggedUser = null;
+        $scope.vm.username = null;
+        $location.path('/login');
+    }
+}])
 .controller("LoginController", ["$scope", "$routeParams", "$location", "UsersService",
     function($scope, $routeParams, $location, UsersService){
         $scope.vm = {};
         $scope.vm.loginInfo = { identifier:"", password:"" };
 
         $scope.login = function(){
+            /* Client-side user login
             if (UsersService.login($scope.vm.loginInfo)){
                 $location.path("/");
             } else {
                 $scope.vm.hasFailedLogin = true;
             }
+            // */
+            //* Server-side user login
+            UsersService.login($scope.vm.loginInfo)
+            .then(function success(){
+                if (UsersService.loggedUser) {
+                    $location.path("/");                    
+                } else {
+                    $scope.vm.hasFailedLogin = true;
+                }
+            });
+            // */
         }
 }])
 .controller("RegistrationController", ["$scope", "$routeParams", "$location", "UsersService",
@@ -287,6 +323,7 @@ angular.module("controller", [])
     }
 
     usersService.login = function(loginInfo){
+        /* Client-side user login
         for (var idx in usersService.Users) {
             var user = usersService.Users[idx];
             if (loginInfo.password == user.password &&
@@ -295,6 +332,21 @@ angular.module("controller", [])
                 return user;
             }
         }
+        // */
+        //* Server-side user login
+        return $http.post(urlReadUser, loginInfo)
+        .then(function success(response){
+            if (response.data.status === 1) {
+                //console.log("Successful login");
+                usersService.loggedUser = response.data.user;
+            } else {
+                //console.log("Failed login");
+            }
+        }, function error(response){
+            //console.log("Server Failure");
+            alert(response.status);
+        });
+        // */
     }
 /*
     usersService.Users = [
@@ -319,7 +371,7 @@ angular.module("controller", [])
         userWithStringDates.dateCreated = new Date(userWithStringDates.dateCreated);
         userWithStringDates.dateUpdated = new Date(userWithStringDates.dateUpdated);
     }
-
+/*
     var readUsers = function(){
         $http.get(urlReadUser)
         .then(function success(response){
@@ -331,7 +383,7 @@ angular.module("controller", [])
             alert(response.status);
         });
     }();
-
+*/
     var getNewID = function(){
         var maxID = function(){
             var max = -1;

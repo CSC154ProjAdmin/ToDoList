@@ -10,7 +10,7 @@
     <link href="css/site.css" rel="stylesheet">    
 </head>
 <body>
-    <nav class="navbar navbar-inverse">
+    <nav class="navbar navbar-inverse" ng-controller="navController">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" href="#">
@@ -18,9 +18,15 @@
                     PrioriTask
                 </a>
             </div>
-            <ul class="nav navbar-nav navbar-right">
+            <ul class="nav navbar-nav navbar-right" ng-show="!isLoggedIn()">
               <li><a href="#/signup"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
               <li><a href="#/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+            </ul>                
+            <ul class="nav navbar-nav navbar-right" ng-show="isLoggedIn()">
+              <li><a href="#">Welcome, {{vm.username}}</a></li>
+              <li><a type="button" class="btn" ng-click="logout()">
+                <span class="glyphicon glyphicon-log-out"></span> Logout</a>
+              </li>
             </ul>                
         </div>
     </nav>
