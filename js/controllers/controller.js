@@ -652,12 +652,12 @@ angular.module("controller", [])
     //var urlRoot = "CSC154ToDoList/";
     //var urlReadTask = urlRoot + "data/task_data.json";
     //var urlCreateTask = urlRoot + "data/task_added.json";
-    var urlUpdateTask = urlRoot + "data/task_updated.json";
+    //var urlUpdateTask = urlRoot + "data/task_updated.json";
     var urlDeleteTask = urlRoot + "data/task_deleted.json";
 
     var urlReadTask = urlRoot + "php/task_read.php";
     var urlCreateTask = urlRoot + "php/task_create.php";
-    // var urlUpdateTask = urlRoot + "php/task_update.php";
+    var urlUpdateTask = urlRoot + "php/task_update.php";
     // var urlDeleteTask = urlRoot + "php/task_delete.php";
 
     var tasksService = {};
