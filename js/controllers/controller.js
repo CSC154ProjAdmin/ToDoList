@@ -261,7 +261,8 @@ angular.module("controller", [])
             });
         }
 }])
-.controller("navController", ["$scope", "$location", "UsersService", function($scope, $location, UsersService){
+.controller("navController", ["$scope", "$location", "UsersService", "ListsService", "TasksService",
+function($scope, $location, UsersService, ListsService, TasksService){
     $scope.vm = {};
     $scope.isLoggedIn = function(){
         if (UsersService.loggedUser != null){
@@ -275,6 +276,8 @@ angular.module("controller", [])
         //console.log("Logging out userID: " + UsersService.loggedUser.userID);
         UsersService.loggedUser = null;
         $scope.vm.username = null;
+        ListsService.Lists = null;
+        TasksService.Tasks = null;
         $location.path('/login');
     }
 
