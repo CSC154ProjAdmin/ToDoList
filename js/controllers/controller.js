@@ -247,13 +247,21 @@ angular.module("controller", [])
             });
         }
 }])
-.controller("navController", ["$scope", "UsersService", function($scope, UsersService){
+.controller("navController", ["$scope", "$location", "UsersService", function($scope, $location, UsersService){
     $scope.vm = {};
     $scope.isLoggedIn = function(){
         if (UsersService.loggedUser != null){
             $scope.vm.username = UsersService.loggedUser.userName;
+            return true;
         }
-        return $scope.vm.username;
+        return false;
+    }
+
+    $scope.logout = function(){
+        //console.log("Logging out userID: " + UsersService.loggedUser.userID);
+        UsersService.loggedUser = null;
+        $scope.vm.username = null;
+        $location.path('/login');
     }
 }])
 .controller("LoginController", ["$scope", "$routeParams", "$location", "UsersService",
