@@ -83,10 +83,10 @@ angular.module("controller", [])
     // }
     var promises = [];
     if (!ListsService.Lists) {
-        promises.push(ListsService.readLists({userID:1, userName:'paul45'}));
+        promises.push(ListsService.readLists($scope.vm.loggedUser));
     }
     if (!TasksService.Tasks) {
-        promises.push(TasksService.readTasks({userID:1, userName:'paul45'}));
+        promises.push(TasksService.readTasks($scope.vm.loggedUser));
     }
     $q.all(promises).then(function success(){ init(); });
 
