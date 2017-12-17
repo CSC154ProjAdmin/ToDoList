@@ -591,6 +591,11 @@ function($scope, $location, UsersService, ListsService, TasksService){
     }
 
     var restoreDates = function(listWithStringDates){
+        var isServerTime = (listWithStringDates.dateCreated.indexOf('T') == -1);
+        if (isServerTime) {
+            listWithStringDates.dateCreated += ' UTC';
+            listWithStringDates.dateUpdated += ' UTC';
+        }
         listWithStringDates.dateCreated = new Date(listWithStringDates.dateCreated);
         listWithStringDates.dateUpdated = new Date(listWithStringDates.dateUpdated);
     }
@@ -809,6 +814,12 @@ function($scope, $location, UsersService, ListsService, TasksService){
     }
 
     var restoreDates = function(taskWithStringDates){
+        var isServerTime = (taskWithStringDates.dateCreated.indexOf('T') == -1);
+        if (isServerTime) {
+            taskWithStringDates.dateDue += ' UTC';
+            taskWithStringDates.dateCreated += ' UTC';
+            taskWithStringDates.dateUpdated += ' UTC';
+        }
         taskWithStringDates.dateDue = new Date(taskWithStringDates.dateDue);
         taskWithStringDates.dateCreated = new Date(taskWithStringDates.dateCreated);
         taskWithStringDates.dateUpdated = new Date(taskWithStringDates.dateUpdated);
