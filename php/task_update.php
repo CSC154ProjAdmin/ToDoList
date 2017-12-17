@@ -16,15 +16,14 @@ if ($body_params) {
     }
 }
 $userQuery = <<<SQL
-Update tasks
-SET isComplete = '{$params["bComplete"]}',
-dateDue = '{$params["dDue"]}',
-dateUpdated = sysdate(3)
+Update Tasks
+Set dUpdated = sysdate(3),
+sTaskName = '{$params["taskName"]}',
+bComplete = {$params["isComplete"] == true ? 1 : 0},
+dDue = '{$params["dateDue"]}'
 Where dDeleted Is Null
-And taskID = '{$params["TaskID"]}'
-And listID = '{$params["ListID"]}'
-And taskName = '{$params["sTaskName"]}' 
-
+And TaskID = {$params["taskID"]}
+And ListID = {$params["listID"]}
 SQL;
 
 $result = mysqli_query($conn, $userQuery);
