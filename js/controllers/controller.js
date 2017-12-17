@@ -42,6 +42,20 @@ angular.module("controller", [])
     var init = function(){
         $scope.vm.tasks = TasksService.Tasks;
         $scope.vm.lists = ListsService.Lists;
+
+        if ($location.url() == "/dash") {
+            $scope.vm.currentTasks = [];
+            var today = new Date();
+            var nextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate()+7);
+            for (var idx in $scope.vm.tasks) {
+                var task = $scope.vm.tasks[idx];
+                if (task.dateDue < nextWeek) {
+                    $scope.vm.currentTasks.push(task);
+                }
+            }
+            return;
+        }
+
         if (!$routeParams || !$routeParams.listID) {
             //console.log("Redirecting to first list in array");
             $location.path('/list/'+ $scope.vm.lists[0].listID);
