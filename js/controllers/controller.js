@@ -277,6 +277,15 @@ angular.module("controller", [])
         $scope.vm.username = null;
         $location.path('/login');
     }
+
+    $scope.toggleView = function(){
+        var isListview = ($location.url().indexOf('/list') != -1);
+        if (isListview) {
+            $location.path('/dash');
+        } else {
+            $location.path('/');
+        }
+    }
 }])
 .controller("LoginController", ["$scope", "$routeParams", "$location", "UsersService",
     function($scope, $routeParams, $location, UsersService){
