@@ -241,8 +241,12 @@ angular.module("controller", [])
         }
 }])
 .controller("navController", ["$scope", "UsersService", function($scope, UsersService){
+    $scope.vm = {};
     $scope.isLoggedIn = function(){
-        return (UsersService.loggedUser == null);
+        if (UsersService.loggedUser != null){
+            $scope.vm.username = UsersService.loggedUser.userName;
+        }
+        return $scope.vm.username;
     }
 }])
 .controller("LoginController", ["$scope", "$routeParams", "$location", "UsersService",
