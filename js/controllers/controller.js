@@ -325,12 +325,12 @@ angular.module("controller", [])
 .service("UsersService", ["$http", function($http){
     var urlRoot = "";
     //var urlRoot = "CSC154ToDoList/";
-    var urlReadUser = urlRoot + "data/user_data.json";
+    //var urlReadUser = urlRoot + "data/user_data.json";
     var urlCreateUser = urlRoot + "data/user_added.json";
     var urlUpdateUser = urlRoot + "data/user_updated.json";
     var urlDeleteUser = urlRoot + "data/user_deleted.json";
 
-    // var urlReadUser = urlRoot + "php/user_read.php";
+    var urlReadUser = urlRoot + "php/user_read.php";
     // var urlCreateUser = urlRoot + "php/user_create.php";
     // var urlUpdateUser = urlRoot + "php/user_update.php";
     // var urlDeleteUser = urlRoot + "php/user_delete.php";
