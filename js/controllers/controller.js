@@ -315,8 +315,8 @@ function($scope, $location, UsersService, ListsService, TasksService){
             // */
         }
 }])
-.controller("RegistrationController", ["$scope", "$routeParams", "$location", "UsersService",
-    function($scope, $routeParams, $location, UsersService){
+.controller("RegistrationController", ["$scope", "$routeParams", "$location", "UsersService", "ListsService", "TasksService",
+    function($scope, $routeParams, $location, UsersService, ListsService, TasksService){
         $scope.vm = {};
         $scope.vm.newUser = UsersService.createUser();
 
@@ -324,11 +324,20 @@ function($scope, $location, UsersService, ListsService, TasksService){
             UsersService.save($scope.vm.newUser)
             .then(function success(){
                 if (UsersService.loggedUser) {
-                    // TODO: Create new list for new user.  ALL USERS MUST HAVE AT LEAST ONE LIST
-                    // TODO: Set TasksService.Tasks to empty array. New user has no tasks
-                    $location.path("/");                    
+                    // TODO: Create new list and task for new user.  ALL USERS MUST HAVE AT LEAST ONE LIST
+                    var newList = ListsService.createList(UsersService.loggedUser.userID);
+                    newList.listName = "My First List";
+                    ListsService.save(newList)
+                    .then(function success(){
+                        var newTask = TasksService.createTask(newList.listID);
+                        newTask.taskName = "My First Task";
+                        TasksService.save(newTask)
+                        .then(function success(){
+                            $location.path("/");                            
+                        });
+                    });
                 } else {
-                    alert("Failed to create user");
+                    alert("Could not create user. Perhaps try a different username or email address.");
                 }
             });
         }
