@@ -287,6 +287,7 @@ angular.module("controller", [])
     }
 
     usersService.login = function(loginInfo){
+        /* Client-side user login
         for (var idx in usersService.Users) {
             var user = usersService.Users[idx];
             if (loginInfo.password == user.password &&
@@ -295,6 +296,21 @@ angular.module("controller", [])
                 return user;
             }
         }
+        // */
+        //* Server-side user login
+        return $http.post(urlReadUser, loginInfo)
+        .then(function success(response){
+            if (response.data.status === 1) {
+                //console.log("Successful login");
+                usersService.loggedUser = response.data.user;
+            } else {
+                //console.log("Failed login");
+            }
+        }, function error(response){
+            //console.log("Server Failure");
+            alert(response.status);
+        });
+        // */
     }
 /*
     usersService.Users = [
