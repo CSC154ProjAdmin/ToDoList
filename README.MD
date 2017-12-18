@@ -3,6 +3,8 @@
 
 The project is about creating to-do list, that will enable the end-user to manage tasks in term of their importance. They will be able to log onto their newly created account and start creating list immediately. Every task created will then be order in term of importance and will be able to focus on those tasks.
 
+The project design was heavily influenced by the Udemy course "AngularJS For Beginners" which can be found at https://www.udemy.com/angularjs-for-beginners-udemy/learn/v4/overview
+
 # Setup and running the application
 To run the app on local machine a personal XAMPP web server or similar is required.  We used USBWebserver V8.6. Google Chrome is recommended browser.
 
