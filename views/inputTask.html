@@ -5,7 +5,7 @@
     </div>
     <form name="taskForm">
         <div class="form-group">
-            <div class="form-group col-sm-6">
+            <div class="form-group col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
                 <label for="name">Task Name</label>
                 <span ng-show="taskForm.name.$dirty && taskForm.name.$invalid" style="color: #FF0000;">
                     * Use letters, numbers, spaces, and ( ) - _ symbols
@@ -14,7 +14,7 @@
                 ng-model="vm.task.taskName" autofocus
                 required ng-pattern="/^[a-zA-z0-9\(\)\-_]+( +[a-zA-z0-9\(\)\-_]+)*$/">
             </div>
-            <div class="form-group col-xs-6 col-sm-3">
+            <div class="form-group col-xs-6 col-sm-offset-1 col-sm-5 col-md-offset-2 col-md-4">
                 <label for="duedate">Due Date</label>
                 <span ng-show="taskForm.duedate.$dirty && taskForm.duedate.$invalid" style="color: #FF0000;">
                     * Required
@@ -23,7 +23,7 @@
                 ng-model="vm.day"
                 required>
             </div>
-            <div class="form-group col-xs-6 col-sm-3">
+            <div class="form-group col-xs-6 col-sm-5 col-md-4">
                 <label for="duetime">Due Time</label>
                 <span ng-show="taskForm.duetime.$dirty && taskForm.duetime.$invalid" style="color: #FF0000;">
                     * Required
@@ -33,7 +33,7 @@
                 required>
             </div>
         </div>
-        <div class="form-group col-xs-6">
+        <div class="form-group col-xs-6 col-sm-offset-1 col-sm-5 col-md-offset-2 col-md-4">
             <button type="button" class="btn btn-lg btn-block" 
                 ng-class="taskForm.$dirty && taskForm.$valid ? 'btn-success' : 'btn-disabled disabled'"
                 ng-click="taskForm.$dirty && taskForm.$valid && save()">
@@ -41,7 +41,7 @@
                 Save
             </button>
         </div>
-        <div class="form-group col-xs-6">
+        <div class="form-group col-xs-6 col-sm-5 col-md-4">
             <a href="#/list/{{vm.task.listID}}" class="btn btn-lg btn-block btn-default">
                 <span class="glyphicon glyphicon-remove"></span>
                 Cancel

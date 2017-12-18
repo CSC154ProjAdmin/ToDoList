@@ -1,21 +1,19 @@
 <div class="col-xs-12">
-    <div class="jumbotron text-center">
+    <div class="text-center">
         <h1 ng-show="vm.list.listID == null">Add List</h1>
         <h1 ng-show="vm.list.listID != null">Edit List</h1>
     </div>
     <form name="listForm">
-        <div class="form-group">
-            <div class="form-group">
-                <label for="name">List Name</label>
-                <span ng-show="listForm.name.$dirty && listForm.name.$invalid" style="color: #FF0000;">
-                    * Invalid list name. Use letters, numbers, spaces, and ( ) - _ symbols
-                </span>
-                <input name="name" class="form-control" required placeholder="Enter list name"
-                ng-model="vm.list.listName" autofocus
-                required ng-pattern="/^[a-zA-z0-9\(\)\-_]+( +[a-zA-z0-9\(\)\-_]+)*$/">
-            </div>
+        <div class="form-group col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8">
+            <label for="name">List Name</label>
+            <span ng-show="listForm.name.$dirty && listForm.name.$invalid" style="color: #FF0000;">
+                * Use letters, numbers, spaces, and ( ) - _ symbols
+            </span>
+            <input name="name" class="form-control" required placeholder="Enter list name"
+            ng-model="vm.list.listName" autofocus
+            required ng-pattern="/^[a-zA-z0-9\(\)\-_]+( +[a-zA-z0-9\(\)\-_]+)*$/">
         </div>
-        <div class="form-group">
+        <div class="form-group col-xs-6 col-sm-offset-1 col-sm-5 col-md-offset-2 col-md-4">
             <button type="button" class="btn btn-lg btn-block" 
                 ng-class="listForm.$dirty && listForm.$valid ? 'btn-success' : 'btn-disabled disabled'"
                 ng-click="listForm.$dirty && listForm.$valid && save()">
@@ -23,7 +21,7 @@
                 Save
             </button>
         </div>
-        <div class="form-group">
+        <div class="form-group col-xs-6 col-sm-5 col-md-4">
             <a href="#/list/{{vm.prevListID}}" class="btn btn-lg btn-block btn-default">
                 <span class="glyphicon glyphicon-remove"></span>
                 Cancel
