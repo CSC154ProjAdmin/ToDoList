@@ -4,7 +4,7 @@
         <h1 ng-show="vm.list.listID != null">Edit List</h1>
     </div>
     <form name="listForm">
-        <div class="form-group col-xs-12">
+        <div class="form-group col-xs-12 col-sm-offset-3 col-sm-6">
             <label for="name">List Name</label>
             <span ng-show="listForm.name.$dirty && listForm.name.$invalid" style="color: #FF0000;">
                 * Use letters, numbers, spaces, and ( ) - _ symbols
@@ -13,7 +13,7 @@
             ng-model="vm.list.listName" autofocus
             required ng-pattern="/^[a-zA-z0-9\(\)\-_]+( +[a-zA-z0-9\(\)\-_]+)*$/">
         </div>
-        <div class="form-group col-xs-6">
+        <div class="form-group col-xs-6 col-sm-offset-3 col-sm-3">
             <button type="button" class="btn btn-lg btn-block" 
                 ng-class="listForm.$dirty && listForm.$valid ? 'btn-success' : 'btn-disabled disabled'"
                 ng-click="listForm.$dirty && listForm.$valid && save()">
@@ -21,7 +21,7 @@
                 Save
             </button>
         </div>
-        <div class="form-group col-xs-6">
+        <div class="form-group col-xs-6 col-sm-3">
             <a href="#/list/{{vm.prevListID}}" class="btn btn-lg btn-block btn-default">
                 <span class="glyphicon glyphicon-remove"></span>
                 Cancel
