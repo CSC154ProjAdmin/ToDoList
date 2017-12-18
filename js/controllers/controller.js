@@ -906,4 +906,16 @@ function($scope, $location, UsersService, ListsService, TasksService){
         }
     }
     return tasksService;
+}])
+.directive('autofocus', ['$timeout', function($timeout) {
+    // Taken from https://gist.github.com/mlynch/dd407b93ed288d499778
+    // MIT license
+    return {
+        restrict: 'A',
+        link : function($scope, $element) {
+            $timeout(function() {
+                $element[0].focus();
+            });
+        }
+    }
 }]);
