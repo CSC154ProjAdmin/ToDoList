@@ -1,5 +1,6 @@
 # CSC154 - ToDoList
-![Sample Screenshot](img/prioritask.png?raw=true "PrioriTask")
+![Sample Screenshot](img/prioritask.png?raw=true "PrioriTask")  
+
 The project is about creating to-do list, that will enable the end-user to manage tasks in term of their importance. They will be able to log onto their newly created account and start creating list immediately. Every task created will then be order in term of importance and will be able to focus on those tasks.
 
 # Setup and running the application
