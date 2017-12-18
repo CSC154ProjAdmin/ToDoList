@@ -11,7 +11,7 @@
                     * Invalid task name. Use letters, numbers, spaces, and ( ) - _ symbols
                 </span>
                 <input name="name" class="form-control" required placeholder="Enter task name"
-                ng-model="vm.task.taskName"
+                ng-model="vm.task.taskName" autofocus
                 required ng-pattern="/^[a-zA-z0-9\(\)\-_]+( +[a-zA-z0-9\(\)\-_]+)*$/">
             </div>
             <div class="form-group col-sm-2">
